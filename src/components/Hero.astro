@@ -1,0 +1,184 @@
+---
+import { hero, quickFacts } from '../data/site';
+---
+
+<section class="hero">
+  <div class="hero__media">
+    <img
+      src={hero.image}
+      alt={hero.imageAlt}
+      width="2400"
+      height="1350"
+      fetchpriority="high"
+      decoding="async"
+    />
+    <div class="hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__body container container--wide">
+    <p class="hero__eyebrow">{hero.eyebrow}</p>
+    <h1 class="display hero__headline">{hero.headline}</h1>
+    <p class="hero__subhead">{hero.subhead}</p>
+    <div class="hero__actions">
+      <a class="btn btn--lg" href={hero.cta.href}>{hero.cta.label}</a>
+      <a class="btn btn--lg btn--onDark" href={hero.secondaryCta.href}>
+        {hero.secondaryCta.label}
+      </a>
+    </div>
+  </div>
+
+  <a class="hero__scroll" href="#the-condo" aria-label="Scroll to the condo details">
+    <span class="hero__scroll-line" aria-hidden="true"></span>
+  </a>
+</section>
+
+<section class="facts" aria-label="At a glance">
+  <ul class="facts__list container container--wide">
+    {quickFacts.map((fact) => (
+      <li class="facts__item">
+        <span class="facts__value">{fact.value}</span>
+        <span class="facts__label">{fact.label}</span>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .hero {
+    position: relative;
+    min-height: min(100svh, 62rem);
+    display: flex;
+    align-items: flex-end;
+    padding-block: var(--s-12) var(--s-10);
+    isolation: isolate;
+    overflow: hidden;
+  }
+
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+
+  /* Two stacked scrims: a broad bottom wash for text contrast, and a light
+     top wash so the transparent header stays legible against a bright sky. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(to top, rgba(11, 20, 27, 0.78) 0%, rgba(11, 20, 27, 0.34) 38%, rgba(11, 20, 27, 0) 68%),
+      linear-gradient(to bottom, rgba(11, 20, 27, 0.42) 0%, rgba(11, 20, 27, 0) 22%);
+  }
+
+  .hero__body { color: #fff; }
+
+  .hero__eyebrow {
+    font-size: var(--t-xs);
+    font-weight: 600;
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: rgba(255, 255, 255, 0.85);
+    margin-bottom: var(--s-5);
+    animation: heroIn var(--d-slow) var(--ease-out) both;
+  }
+
+  .hero__headline {
+    color: #fff;
+    max-width: 16ch;
+    text-shadow: 0 2px 40px rgba(11, 20, 27, 0.35);
+    animation: heroIn var(--d-slow) var(--ease-out) 90ms both;
+  }
+
+  .hero__subhead {
+    margin-top: var(--s-5);
+    max-width: 44ch;
+    font-size: var(--t-lg);
+    line-height: var(--lh-loose);
+    color: rgba(255, 255, 255, 0.9);
+    text-wrap: pretty;
+    animation: heroIn var(--d-slow) var(--ease-out) 180ms both;
+  }
+
+  .hero__actions {
+    margin-top: var(--s-7);
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-4);
+    animation: heroIn var(--d-slow) var(--ease-out) 270ms both;
+  }
+
+  @keyframes heroIn {
+    from { opacity: 0; transform: translateY(1.5rem); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  /* ── Scroll cue ─────────────────────────────────────────────────────────── */
+  .hero__scroll {
+    position: absolute;
+    left: 50%;
+    bottom: var(--s-5);
+    translate: -50% 0;
+    width: 2.5rem;
+    height: 3.5rem;
+    display: grid;
+    place-items: center;
+  }
+  .hero__scroll-line {
+    width: 1px;
+    height: 2.5rem;
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 100%);
+    transform-origin: top;
+    animation: drop 2.4s var(--ease) infinite;
+  }
+
+  @keyframes drop {
+    0%        { transform: scaleY(0); opacity: 0; }
+    35%, 65%  { transform: scaleY(1); opacity: 1; }
+    100%      { transform: scaleY(1) translateY(100%); opacity: 0; }
+  }
+
+  /* ── Quick facts ────────────────────────────────────────────────────────── */
+  .facts {
+    background: var(--c-ink);
+    color: var(--c-bone);
+    padding-block: var(--s-6);
+  }
+
+  .facts__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .facts__item {
+    display: grid;
+    justify-items: center;
+    gap: var(--s-1);
+    text-align: center;
+    padding-block: var(--s-2);
+    border-left: 1px solid rgba(250, 248, 244, 0.15);
+  }
+  .facts__item:first-child { border-left: 0; }
+
+  .facts__value {
+    font-family: var(--font-display);
+    font-size: var(--t-2xl);
+    font-variation-settings: 'SOFT' 24, 'WONK' 0, 'opsz' 48;
+    line-height: 1;
+  }
+
+  .facts__label {
+    font-size: var(--t-xs);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: var(--c-sea-soft);
+  }
+
+  @media (max-width: 40rem) {
+    .hero { min-height: 92svh; }
+    .hero__actions .btn { flex: 1 1 auto; }
+    .facts__list { grid-template-columns: repeat(2, 1fr); row-gap: var(--s-5); }
+    .facts__item:nth-child(odd) { border-left: 0; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .hero__scroll-line { animation: none; opacity: 0.85; }
+    :is(.hero__eyebrow, .hero__headline, .hero__subhead, .hero__actions) { animation: none; }
+  }
+</style>

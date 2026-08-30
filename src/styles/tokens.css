@@ -1,0 +1,136 @@
+/* ─────────────────────────────────────────────────────────────────────────────
+   DESIGN TOKENS
+   The whole visual system lives here. Change a value once, it changes
+   everywhere. Components reference these variables and never hard-code a
+   colour, a size, or a timing.
+   ───────────────────────────────────────────────────────────────────────────── */
+
+:root {
+  color-scheme: light;
+
+  /* ── Colour ───────────────────────────────────────────────────────────────
+     A warm, sun-bleached neutral base so photography carries the colour, with
+     a deep sea-teal for structure and a single terracotta accent. */
+
+  --c-bone:        #faf8f4;  /* page ground — warm off-white, never pure #fff */
+  --c-paper:       #ffffff;  /* raised surfaces: cards, form fields */
+  --c-sand:        #f2ede5;  /* alternating section bands */
+  --c-shell:       #e5ded2;  /* hairlines, dividers, image placeholders */
+  --c-driftwood:   #cdc3b4;  /* muted borders on sand */
+
+  --c-ink:         #16212c;  /* primary text — deep blue-black, not pure black */
+  --c-slate:       #48566a;  /* secondary text, body copy at length */
+  --c-mist:        #636d7a;  /* tertiary: captions, meta, labels — 4.5:1 on every light ground */
+
+  --c-sea:         #1f4e5c;  /* primary brand — deep teal */
+  --c-sea-deep:    #143842;  /* hover / pressed */
+  --c-sea-soft:    #6f9aa6;  /* decorative, on dark grounds only */
+  --c-sea-mid:     #678f9a;  /* icons on light grounds — clears 3:1 */
+  --c-sea-wash:    #e8f0f1;  /* tinted backgrounds */
+
+  --c-sun:         #9f5937;  /* accent — terracotta, used sparingly */
+  --c-sun-wash:    #f7ece5;
+
+  --c-focus:       #2d7d92;  /* focus ring — must clear 3:1 on both grounds */
+
+  /* Semantic aliases — prefer these in components */
+  --bg:            var(--c-bone);
+  --bg-alt:        var(--c-sand);
+  --surface:       var(--c-paper);
+  --text:          var(--c-ink);
+  --text-muted:    var(--c-slate);
+  --text-subtle:   var(--c-mist);
+  --line:          var(--c-shell);
+  --accent:        var(--c-sea);
+
+  /* ── Type ─────────────────────────────────────────────────────────────────
+     Fraunces for display (a soft, warm serif), Inter for everything else.
+     Both fall back to solid system stacks if the webfont never arrives. */
+
+  --font-display: 'Fraunces', 'Iowan Old Style', 'Palatino Linotype', Palatino,
+                  Georgia, 'Times New Roman', serif;
+  --font-body:    'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto,
+                  'Helvetica Neue', Arial, sans-serif;
+
+  /* Fluid scale — each step interpolates between a phone and a desktop. */
+  --t-xs:      0.75rem;                                  /* 12px  — labels */
+  --t-sm:      0.8125rem;                                /* 13px  — meta */
+  --t-base:    1.0625rem;                                /* 17px  — body */
+  --t-lg:      clamp(1.125rem, 0.35vw + 1.05rem, 1.25rem);
+  --t-xl:      clamp(1.375rem, 0.7vw + 1.2rem, 1.75rem);
+  --t-2xl:     clamp(1.75rem, 1.4vw + 1.4rem, 2.5rem);
+  --t-3xl:     clamp(2.25rem, 2.6vw + 1.6rem, 3.5rem);
+  --t-4xl:     clamp(2.75rem, 4.4vw + 1.6rem, 5rem);
+  --t-display: clamp(3rem, 7.5vw + 0.75rem, 7rem);
+
+  --lh-tight:  1.06;
+  --lh-snug:   1.22;
+  --lh-normal: 1.5;
+  --lh-loose:  1.7;
+
+  --ls-tight:  -0.022em;
+  --ls-snug:   -0.012em;
+  --ls-normal: 0;
+  --ls-wide:   0.08em;
+  --ls-caps:   0.14em;   /* for uppercase eyebrows */
+
+  /* ── Space ────────────────────────────────────────────────────────────────
+     A 4px-rooted scale. Section padding is fluid so the rhythm holds from
+     phone to desktop. */
+
+  --s-1:  0.25rem;
+  --s-2:  0.5rem;
+  --s-3:  0.75rem;
+  --s-4:  1rem;
+  --s-5:  1.5rem;
+  --s-6:  2rem;
+  --s-7:  2.5rem;
+  --s-8:  3rem;
+  --s-9:  4rem;
+  --s-10: 5rem;
+  --s-11: 6rem;
+  --s-12: 8rem;
+
+  --section-y:  clamp(4.5rem, 9vw, 9rem);   /* vertical padding per section */
+  --gutter:     clamp(1.25rem, 5vw, 3rem);  /* page edge margin */
+
+  /* ── Layout ───────────────────────────────────────────────────────────── */
+  --w-full:  100%;
+  --w-wide:  84rem;   /* 1344px — full-bleed-ish content */
+  --w-page:  72rem;   /* 1152px — default container */
+  --w-text:  38rem;   /* 608px  — comfortable measure for prose */
+  --w-narrow: 30rem;
+
+  /* ── Radius ───────────────────────────────────────────────────────────── */
+  --r-sm:   4px;
+  --r-md:   8px;
+  --r-lg:   14px;
+  --r-xl:   22px;
+  --r-full: 999px;
+
+  /* ── Elevation ────────────────────────────────────────────────────────────
+     Soft, warm-tinted shadows — a neutral grey shadow reads as dirt against
+     a bone ground. */
+  --sh-sm: 0 1px 2px rgba(22, 33, 44, 0.05),
+           0 2px 6px rgba(22, 33, 44, 0.04);
+  --sh-md: 0 2px 4px rgba(22, 33, 44, 0.05),
+           0 8px 20px rgba(22, 33, 44, 0.07);
+  --sh-lg: 0 4px 8px rgba(22, 33, 44, 0.05),
+           0 18px 44px rgba(22, 33, 44, 0.10);
+  --sh-xl: 0 8px 16px rgba(22, 33, 44, 0.06),
+           0 32px 72px rgba(22, 33, 44, 0.13);
+
+  /* ── Motion ───────────────────────────────────────────────────────────────
+     Two curves: `--ease` for most things, `--ease-out` for entrances. */
+  --ease:      cubic-bezier(0.4, 0, 0.2, 1);
+  --ease-out:  cubic-bezier(0.16, 1, 0.3, 1);
+  --d-fast:    140ms;
+  --d-base:    240ms;
+  --d-slow:    460ms;
+  --d-slower:  900ms;
+
+  /* ── Chrome ───────────────────────────────────────────────────────────── */
+  --header-h: 4.5rem;
+  --z-header: 100;
+  --z-lightbox: 200;
+}

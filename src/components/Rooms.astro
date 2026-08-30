@@ -1,0 +1,65 @@
+---
+import { rooms } from '../data/site';
+---
+
+<section class="rooms section section--sand" aria-labelledby="rooms-title">
+  <div class="container container--wide">
+    <div class="section-head reveal">
+      <p class="eyebrow">Room by room</p>
+      <h2 class="h2" id="rooms-title">Every corner of it</h2>
+    </div>
+
+    <ol class="rooms__list">
+      {rooms.map((room, i) => (
+        <li class="room reveal">
+          <figure class="room__media">
+            <div class="frame frame--wide frame--zoom">
+              <img src={room.image} alt={room.imageAlt} width="2000" height="1500" loading="lazy" decoding="async" />
+            </div>
+          </figure>
+          <div class="room__text">
+            <p class="room__index">{String(i + 1).padStart(2, '0')}</p>
+            <h3 class="h3 room__name">{room.name}</h3>
+            <p class="room__detail">{room.detail}</p>
+          </div>
+        </li>
+      ))}
+    </ol>
+  </div>
+</section>
+
+<style>
+  .rooms__list { display: grid; gap: clamp(var(--s-8), 7vw, var(--s-11)); }
+
+  .room {
+    display: grid;
+    grid-template-columns: 1.15fr 1fr;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: center;
+  }
+
+  /* Alternate sides so the eye zig-zags down the page. */
+  .room:nth-child(even) .room__media { order: 2; }
+
+  .room__index {
+    font-family: var(--font-display);
+    font-size: var(--t-sm);
+    font-variation-settings: 'SOFT' 20, 'opsz' 14;
+    letter-spacing: var(--ls-wide);
+    color: var(--c-sun);
+    margin-bottom: var(--s-3);
+  }
+
+  .room__detail {
+    margin-top: var(--s-4);
+    color: var(--text-muted);
+    line-height: var(--lh-loose);
+    max-width: 42ch;
+    text-wrap: pretty;
+  }
+
+  @media (max-width: 54rem) {
+    .room { grid-template-columns: 1fr; gap: var(--s-5); }
+    .room:nth-child(even) .room__media { order: 0; }
+  }
+</style>

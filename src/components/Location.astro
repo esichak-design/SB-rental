@@ -1,0 +1,144 @@
+---
+import { location } from '../data/site';
+---
+
+<section class="location section section--sand" id="location" aria-labelledby="location-title">
+  <div class="container container--wide location__grid">
+    <div class="location__intro reveal">
+      <p class="eyebrow">{location.eyebrow}</p>
+      <h2 class="h2" id="location-title">{location.headline}</h2>
+      <p class="lede location__body">{location.body}</p>
+
+      {location.mapEmbedUrl ? (
+        <div class="location__map">
+          <iframe
+            src={location.mapEmbedUrl}
+            title={`Map showing the location of the condo in ${location.address ?? 'the area'}`}
+            loading="lazy"
+            referrerpolicy="no-referrer-when-downgrade"
+            allowfullscreen
+          ></iframe>
+        </div>
+      ) : location.address ? (
+        <div class="location__card">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none" aria-hidden="true">
+            <path d="M9 16s6-4.7 6-9A6 6 0 0 0 3 7c0 4.3 6 9 6 9Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
+            <circle cx="9" cy="7" r="2.1" stroke="currentColor" stroke-width="1.5"/>
+          </svg>
+          <div>
+            <p class="location__card-label">Where you'll be</p>
+            <p class="location__card-value">{location.address}</p>
+            <p class="location__card-note">
+              We send the exact address and door code once your dates are confirmed.
+            </p>
+          </div>
+        </div>
+      ) : null}
+    </div>
+
+    <div class="location__nearby reveal">
+      <h3 class="location__nearby-title">Getting around</h3>
+      <ul class="nearby">
+        {location.nearby.map((place) => (
+          <li class="nearby__row">
+            <div class="nearby__what">
+              <span class="nearby__name">{place.name}</span>
+              <span class="nearby__detail">{place.detail}</span>
+            </div>
+            <span class="nearby__distance">{place.distance}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </div>
+</section>
+
+<style>
+  .location__grid {
+    display: grid;
+    grid-template-columns: 1fr 0.85fr;
+    gap: clamp(var(--s-7), 6vw, var(--s-10));
+    align-items: start;
+  }
+
+  .location__body { margin-top: var(--s-5); }
+
+  /* ── Map ────────────────────────────────────────────────────────────────── */
+  .location__map {
+    margin-top: var(--s-7);
+    border-radius: var(--r-lg);
+    overflow: hidden;
+    border: 1px solid var(--c-driftwood);
+    aspect-ratio: 16 / 10;
+    background: var(--c-shell);
+  }
+  .location__map iframe { width: 100%; height: 100%; border: 0; display: block; }
+
+  /* ── Address card (shown when there is no map) ──────────────────────────── */
+  .location__card {
+    margin-top: var(--s-7);
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-4);
+    padding: var(--s-6);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    color: var(--c-sea);
+  }
+  .location__card-label {
+    font-size: var(--t-xs);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: var(--text-subtle);
+  }
+  .location__card-value {
+    margin-top: var(--s-2);
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-variation-settings: 'SOFT' 20, 'opsz' 24;
+    color: var(--text);
+  }
+  .location__card-note {
+    margin-top: var(--s-3);
+    font-size: var(--t-sm);
+    line-height: var(--lh-normal);
+    color: var(--text-subtle);
+  }
+
+  /* ── Nearby list ────────────────────────────────────────────────────────── */
+  .location__nearby-title {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-variation-settings: 'SOFT' 20, 'opsz' 24;
+    letter-spacing: var(--ls-snug);
+    padding-bottom: var(--s-4);
+    border-bottom: 1px solid var(--c-driftwood);
+  }
+
+  .nearby__row {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: var(--s-5);
+    padding-block: var(--s-5);
+    border-bottom: 1px solid var(--c-driftwood);
+  }
+
+  .nearby__what { display: grid; gap: 2px; }
+  .nearby__name { font-weight: 500; }
+  .nearby__detail { font-size: var(--t-sm); color: var(--text-subtle); }
+
+  .nearby__distance {
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 20, 'opsz' 20;
+    font-size: 0.9688rem;
+    color: var(--c-sea);
+    white-space: nowrap;
+    text-align: right;
+  }
+
+  @media (max-width: 56rem) {
+    .location__grid { grid-template-columns: 1fr; }
+  }
+</style>

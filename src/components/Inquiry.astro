@@ -1,0 +1,459 @@
+---
+import { inquire, contact, inquiryForm } from '../data/site';
+
+// Resolve the POST target once, at build time.
+const endpoint = inquiryForm.accessKey
+  ? (inquiryForm.endpoint ?? 'https://api.web3forms.com/submit')
+  : inquiryForm.endpoint;
+---
+
+<section class="inquiry section" id="inquire" aria-labelledby="inquire-title">
+  <div class="container container--wide inquiry__grid">
+    <div class="inquiry__intro reveal">
+      <p class="eyebrow">{inquire.eyebrow}</p>
+      <h2 class="h2" id="inquire-title">{inquire.headline}</h2>
+      <p class="lede inquiry__body">{inquire.body}</p>
+
+      <div class="inquiry__direct">
+        <p class="inquiry__direct-label">Or reach us directly</p>
+        <a class="inquiry__direct-link" href={`mailto:${contact.email}`}>{contact.email}</a>
+        {contact.phone && (
+          <a class="inquiry__direct-link" href={`tel:${contact.phoneHref}`}>{contact.phone}</a>
+        )}
+        {contact.responseTime && <p class="inquiry__promise">{contact.responseTime}</p>}
+      </div>
+    </div>
+
+    <div class="inquiry__panel reveal">
+      <form
+        class:list={['form', { 'form--js-only': !endpoint }]}
+        data-inquiry-form
+        method="post"
+        action={endpoint ?? undefined}
+        data-endpoint={endpoint ?? ''}
+        data-mailto={contact.email}
+        data-success={inquiryForm.successMessage}
+        novalidate
+      >
+        {inquiryForm.accessKey && (
+          <input type="hidden" name="access_key" value={inquiryForm.accessKey} />
+        )}
+        <input type="hidden" name="_subject" value="New booking inquiry from the website" />
+
+        {/* Honeypot — bots fill it, people never see it. */}
+        <div class="form__trap" aria-hidden="true">
+          <label for="company">Company</label>
+          <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label class="field__label" for="name">Name <span class="field__req">*</span></label>
+            <input class="field__input" type="text" id="name" name="name" autocomplete="name" required />
+            <p class="field__error" data-error-for="name" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="email">Email <span class="field__req">*</span></label>
+            <input class="field__input" type="email" id="email" name="email" autocomplete="email" required />
+            <p class="field__error" data-error-for="email" hidden></p>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label class="field__label" for="arrival">Arrival</label>
+            <input class="field__input" type="date" id="arrival" name="arrival" />
+            <p class="field__error" data-error-for="arrival" hidden></p>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="departure">Departure</label>
+            <input class="field__input" type="date" id="departure" name="departure" />
+            <p class="field__error" data-error-for="departure" hidden></p>
+          </div>
+        </div>
+
+        <div class="form__row">
+          <div class="field">
+            <label class="field__label" for="guests">Guests</label>
+            <select class="field__input field__input--select" id="guests" name="guests">
+              <option value="">Select…</option>
+              {[1, 2, 3, 4, 5, 6].map((n) => (
+                <option value={String(n)}>{n} {n === 1 ? 'guest' : 'guests'}</option>
+              ))}
+            </select>
+          </div>
+
+          <div class="field">
+            <label class="field__label" for="phone">Phone <span class="field__opt">(optional)</span></label>
+            <input class="field__input" type="tel" id="phone" name="phone" autocomplete="tel" />
+          </div>
+        </div>
+
+        <div class="field">
+          <label class="field__label" for="message">Anything we should know?</label>
+          <textarea
+            class="field__input field__input--area"
+            id="message"
+            name="message"
+            rows="4"
+            placeholder="Travelling with kids, flexible on dates, celebrating something — whatever helps."
+          ></textarea>
+        </div>
+
+        <button class="btn btn--lg btn--block form__submit" type="submit" data-submit>
+          <span data-submit-label>Send inquiry</span>
+        </button>
+
+        {!endpoint && (
+          <noscript>
+            <p class="form__noscript">
+              This form needs JavaScript to send. Please email us at{' '}
+              <a href={`mailto:${contact.email}`}>{contact.email}</a> with your dates
+              and party size, and we will come straight back to you.
+            </p>
+          </noscript>
+        )}
+
+        <p class="form__fineprint">
+          We only use your details to answer this inquiry. No lists, no sharing.
+        </p>
+
+        <p class="form__status" data-status role="status" aria-live="polite" hidden></p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<style>
+  .inquiry { background: var(--bg-alt); }
+
+  .inquiry__grid {
+    display: grid;
+    grid-template-columns: 0.85fr 1fr;
+    gap: clamp(var(--s-7), 6vw, var(--s-10));
+    align-items: start;
+  }
+
+  .inquiry__body { margin-top: var(--s-5); }
+
+  .inquiry__direct {
+    margin-top: var(--s-8);
+    padding-top: var(--s-6);
+    border-top: 1px solid var(--c-driftwood);
+  }
+  .inquiry__direct-label {
+    font-size: var(--t-xs);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: var(--text-subtle);
+    margin-bottom: var(--s-3);
+  }
+  .inquiry__direct-link {
+    display: block;
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-variation-settings: 'SOFT' 20, 'opsz' 24;
+    color: var(--c-sea);
+    margin-bottom: var(--s-1);
+    width: fit-content;
+  }
+  .inquiry__direct-link:hover { text-decoration: underline; text-underline-offset: 4px; }
+
+  .inquiry__promise {
+    margin-top: var(--s-4);
+    font-size: var(--t-sm);
+    color: var(--text-subtle);
+  }
+
+  /* ── Panel ──────────────────────────────────────────────────────────────── */
+  .inquiry__panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-xl);
+    padding: clamp(var(--s-6), 3vw, var(--s-8));
+    box-shadow: var(--sh-lg);
+  }
+
+  .form { display: grid; gap: var(--s-5); }
+  .form__row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--s-4); }
+
+  .form__trap {
+    position: absolute;
+    width: 1px; height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  /* ── Fields ─────────────────────────────────────────────────────────────── */
+  .field { display: grid; gap: var(--s-2); min-width: 0; }
+
+  .field__label {
+    font-size: var(--t-sm);
+    font-weight: 500;
+    color: var(--text);
+  }
+  .field__req { color: var(--c-sun); }
+  .field__opt { color: var(--text-subtle); font-weight: 400; }
+
+  .field__input {
+    width: 100%;
+    padding: 0.8rem 0.9rem;
+    background: var(--c-bone);
+    border: 1px solid var(--c-driftwood);
+    border-radius: var(--r-md);
+    font-size: var(--t-base);
+    color: var(--text);
+    transition: border-color var(--d-fast) var(--ease), box-shadow var(--d-fast) var(--ease),
+                background var(--d-fast) var(--ease);
+  }
+  .field__input::placeholder { color: var(--text-subtle); }
+
+  .field__input:hover { border-color: var(--c-mist); }
+
+  .field__input:focus {
+    outline: none;
+    background: var(--surface);
+    border-color: var(--c-sea);
+    box-shadow: 0 0 0 3px rgba(31, 78, 92, 0.14);
+  }
+  /* Keep the ring visible for keyboard users on top of the styled focus. */
+  .field__input:focus-visible { outline: 2px solid transparent; }
+
+  .field__input--area { resize: vertical; min-height: 6.5rem; line-height: var(--lh-normal); }
+
+  .field__input--select {
+    appearance: none;
+    background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8' fill='none'><path d='M1 1.5 6 6.5l5-5' stroke='%237d8a9a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 0.9rem center;
+    padding-right: 2.4rem;
+  }
+
+  /* Date inputs render narrow on iOS without this. */
+  .field__input[type='date'] { min-height: 3rem; }
+
+  .field__input[aria-invalid='true'] {
+    border-color: #b4472f;
+    background: #fdf5f3;
+  }
+  .field__input[aria-invalid='true']:focus { box-shadow: 0 0 0 3px rgba(180, 71, 47, 0.15); }
+
+  .field__error {
+    font-size: var(--t-sm);
+    color: #96361f;
+    display: flex;
+    align-items: center;
+    gap: var(--s-2);
+  }
+  .field__error[hidden] { display: none; }
+
+  /* ── Submit + status ────────────────────────────────────────────────────── */
+  .form__submit { margin-top: var(--s-2); }
+  .form__submit[disabled] { opacity: 0.65; cursor: progress; }
+
+  /* With no endpoint configured the form submits through JavaScript alone, so
+     without it the button would silently discard what the visitor typed.
+     Hide it and show the email address instead. */
+  html:not(.js) .form--js-only .form__submit,
+  html:not(.js) .form--js-only .form__fineprint { display: none; }
+
+  .form__noscript {
+    padding: var(--s-5);
+    background: var(--c-sun-wash);
+    border-radius: var(--r-md);
+    font-size: 0.9688rem;
+    line-height: var(--lh-normal);
+    color: var(--text-muted);
+  }
+  .form__noscript a { color: var(--c-sea); font-weight: 500; text-decoration: underline; }
+
+  .form__fineprint {
+    font-size: var(--t-sm);
+    color: var(--text-subtle);
+    text-align: center;
+    line-height: var(--lh-normal);
+  }
+
+  .form__status {
+    padding: var(--s-5);
+    border-radius: var(--r-md);
+    font-size: 0.9688rem;
+    line-height: var(--lh-normal);
+  }
+  .form__status[hidden] { display: none; }
+  .form__status[data-tone='ok']   { background: var(--c-sea-wash); color: var(--c-sea-deep); }
+  .form__status[data-tone='err']  { background: #fbeee9; color: #96361f; }
+
+  @media (max-width: 56rem) {
+    .inquiry__grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 34rem) {
+    .form__row { grid-template-columns: 1fr; }
+  }
+</style>
+
+<script>
+  // ── Inquiry form ────────────────────────────────────────────────────────────
+  // Three behaviours, in order of preference:
+  //   1. An endpoint is configured  → POST it with fetch, report inline.
+  //   2. No endpoint                → build a mailto: with everything filled in,
+  //                                   so the form is useful before it is wired up.
+  //   3. No JavaScript              → the <form action> still posts natively when
+  //                                   an endpoint exists.
+  const form = document.querySelector<HTMLFormElement>('[data-inquiry-form]');
+
+  if (form) {
+    const status = form.querySelector<HTMLElement>('[data-status]')!;
+    const submit = form.querySelector<HTMLButtonElement>('[data-submit]')!;
+    const label = form.querySelector<HTMLElement>('[data-submit-label]')!;
+    const endpoint = form.dataset.endpoint || '';
+    const mailto = form.dataset.mailto || '';
+    const successMessage = form.dataset.success || '';
+
+    const fieldOf = (name: string) =>
+      form.querySelector<HTMLInputElement>(`[name="${name}"]`);
+    const errorOf = (name: string) =>
+      form.querySelector<HTMLElement>(`[data-error-for="${name}"]`);
+
+    const setError = (name: string, message: string | null) => {
+      const field = fieldOf(name);
+      const slot = errorOf(name);
+      if (!field) return;
+      if (message) {
+        field.setAttribute('aria-invalid', 'true');
+        if (slot) { slot.textContent = message; slot.hidden = false; }
+      } else {
+        field.removeAttribute('aria-invalid');
+        if (slot) { slot.textContent = ''; slot.hidden = true; }
+      }
+    };
+
+    const setStatus = (message: string, tone: 'ok' | 'err') => {
+      status.textContent = message;
+      status.dataset.tone = tone;
+      status.hidden = false;
+    };
+
+    /** Returns the name of the first invalid field, or null when all clear. */
+    const validate = (): string | null => {
+      let first: string | null = null;
+      const fail = (name: string, message: string) => {
+        setError(name, message);
+        first ??= name;
+      };
+
+      const name = fieldOf('name');
+      const email = fieldOf('email');
+      const arrival = fieldOf('arrival');
+      const departure = fieldOf('departure');
+
+      setError('name', null);
+      setError('email', null);
+      setError('arrival', null);
+      setError('departure', null);
+
+      if (!name?.value.trim()) fail('name', 'Please tell us your name.');
+
+      const address = email?.value.trim() ?? '';
+      if (!address) fail('email', 'We need an email address to reply to.');
+      else if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(address))
+        fail('email', 'That address does not look quite right.');
+
+      // Dates are optional, but if both are given they must make sense.
+      if (arrival?.value && departure?.value && departure.value <= arrival.value) {
+        fail('departure', 'Departure needs to be after arrival.');
+      }
+
+      return first;
+    };
+
+    /** Human-readable summary used for the mailto: fallback. */
+    const composeEmail = (data: FormData) => {
+      const get = (k: string) => String(data.get(k) ?? '').trim();
+      const lines = [
+        `Name: ${get('name')}`,
+        `Email: ${get('email')}`,
+        get('phone') && `Phone: ${get('phone')}`,
+        get('arrival') && `Arrival: ${get('arrival')}`,
+        get('departure') && `Departure: ${get('departure')}`,
+        get('guests') && `Guests: ${get('guests')}`,
+        '',
+        get('message') || '(no additional notes)',
+      ].filter(Boolean);
+
+      return {
+        subject: 'Booking inquiry from the website',
+        body: lines.join('\n'),
+      };
+    };
+
+    // Clear a field's error as soon as the visitor starts fixing it.
+    form.addEventListener('input', (e) => {
+      const target = e.target as HTMLElement;
+      const name = target.getAttribute('name');
+      if (name && target.getAttribute('aria-invalid') === 'true') setError(name, null);
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+
+      const invalid = validate();
+      if (invalid) {
+        fieldOf(invalid)?.focus();
+        setStatus('Please check the highlighted fields and try again.', 'err');
+        return;
+      }
+
+      const data = new FormData(form);
+
+      // Honeypot tripped — pretend it worked and drop it on the floor.
+      if (String(data.get('company') ?? '').trim()) {
+        setStatus(successMessage, 'ok');
+        form.reset();
+        return;
+      }
+
+      // ── Fallback: no endpoint configured ──────────────────────────────────
+      if (!endpoint) {
+        const { subject, body } = composeEmail(data);
+        window.location.assign(
+          `mailto:${mailto}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`,
+        );
+        setStatus(
+          `Your email app should be opening with the details filled in. If nothing happened, email us at ${mailto}.`,
+          'ok',
+        );
+        return;
+      }
+
+      // ── Normal path: POST to the configured endpoint ──────────────────────
+      submit.disabled = true;
+      label.textContent = 'Sending…';
+      status.hidden = true;
+
+      try {
+        const response = await fetch(endpoint, {
+          method: 'POST',
+          body: data,
+          headers: { Accept: 'application/json' },
+        });
+
+        if (!response.ok) throw new Error(`Request failed with ${response.status}`);
+
+        form.reset();
+        setStatus(successMessage, 'ok');
+        label.textContent = 'Sent';
+      } catch {
+        setStatus(
+          `Something went wrong sending that. Please email us directly at ${mailto} and we will pick it up from there.`,
+          'err',
+        );
+        submit.disabled = false;
+        label.textContent = 'Try again';
+      }
+    });
+  }
+</script>

@@ -1,0 +1,27 @@
+---
+interface Props {
+  eyebrow?: string;
+  title: string;
+  lede?: string;
+}
+const { eyebrow, title, lede } = Astro.props;
+---
+
+<header class="page-header">
+  <div class="container container--wide">
+    {eyebrow && <p class="eyebrow">{eyebrow}</p>}
+    <h1 class="h1 page-header__title">{title}</h1>
+    {lede && <p class="lede page-header__lede">{lede}</p>}
+  </div>
+</header>
+
+<style>
+  /* Extra top padding clears the fixed header, which is opaque on inner pages. */
+  .page-header {
+    padding-top: calc(var(--header-h) + clamp(var(--s-8), 7vw, var(--s-11)));
+    padding-bottom: clamp(var(--s-7), 5vw, var(--s-9));
+  }
+
+  .page-header__title { max-width: 16ch; }
+  .page-header__lede { margin-top: var(--s-5); }
+</style>

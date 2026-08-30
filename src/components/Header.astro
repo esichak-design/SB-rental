@@ -1,0 +1,262 @@
+---
+import { site, nav } from '../data/site';
+
+interface Props {
+  /** Inner pages need an opaque header; the home page floats it over the hero. */
+  solid?: boolean;
+}
+const { solid = false } = Astro.props;
+---
+
+<header class:list={['site-header', { 'site-header--solid': solid }]} data-header>
+  <div class="site-header__inner container container--wide">
+    <a class="wordmark" href="/" aria-label={`${site.name} — home`}>
+      <span class="wordmark__name">{site.shortName}</span>
+      <span class="wordmark__place">{site.location}</span>
+    </a>
+
+    <nav class="site-nav" aria-label="Primary">
+      <ul class="site-nav__list">
+        {nav.map((item) => (
+          <li><a class="site-nav__link" href={item.href}>{item.label}</a></li>
+        ))}
+      </ul>
+    </nav>
+
+    <a class="btn btn--header" href="/#inquire">Check dates</a>
+
+    <button
+      class="menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="mobile-menu"
+      data-menu-toggle
+    >
+      <span class="visually-hidden">Menu</span>
+      <span class="menu-toggle__bar" aria-hidden="true"></span>
+      <span class="menu-toggle__bar" aria-hidden="true"></span>
+    </button>
+  </div>
+
+  <div class="mobile-menu" id="mobile-menu" data-menu hidden>
+    <ul class="mobile-menu__list">
+      {nav.map((item) => (
+        <li><a class="mobile-menu__link" href={item.href}>{item.label}</a></li>
+      ))}
+      <li><a class="mobile-menu__link mobile-menu__link--cta" href="/#inquire">Check dates</a></li>
+    </ul>
+  </div>
+</header>
+
+<style>
+  .site-header {
+    position: fixed;
+    inset: 0 0 auto 0;
+    z-index: var(--z-header);
+    height: var(--header-h);
+    display: flex;
+    align-items: center;
+    transition:
+      background var(--d-base) var(--ease),
+      box-shadow var(--d-base) var(--ease),
+      border-color var(--d-base) var(--ease);
+    border-bottom: 1px solid transparent;
+  }
+
+  .site-header__inner {
+    display: flex;
+    align-items: center;
+    gap: var(--s-6);
+    width: 100%;
+  }
+
+  /* ── Over the hero: white text, no background ───────────────────────────── */
+  .site-header :is(.wordmark, .site-nav__link) { color: #fff; }
+  .site-header .wordmark__place { color: rgba(255, 255, 255, 0.72); }
+  .site-header .menu-toggle__bar { background: #fff; }
+
+  /* ── Scrolled, or on an inner page: solid ───────────────────────────────── */
+  .site-header--solid,
+  .site-header.is-stuck {
+    background: rgba(250, 248, 244, 0.86);
+    backdrop-filter: saturate(1.6) blur(14px);
+    -webkit-backdrop-filter: saturate(1.6) blur(14px);
+    border-bottom-color: var(--line);
+  }
+
+  :is(.site-header--solid, .site-header.is-stuck) :is(.wordmark, .site-nav__link) {
+    color: var(--c-ink);
+  }
+  :is(.site-header--solid, .site-header.is-stuck) .wordmark__place { color: var(--text-subtle); }
+  :is(.site-header--solid, .site-header.is-stuck) .menu-toggle__bar { background: var(--c-ink); }
+
+  /* ── Wordmark ───────────────────────────────────────────────────────────── */
+  .wordmark {
+    display: grid;
+    line-height: 1.15;
+    margin-right: auto;
+  }
+  .wordmark__name {
+    font-family: var(--font-display);
+    font-size: 1.3rem;
+    font-variation-settings: 'SOFT' 20, 'WONK' 1, 'opsz' 24;
+    letter-spacing: var(--ls-snug);
+  }
+  .wordmark__place {
+    font-size: var(--t-xs);
+    letter-spacing: var(--ls-wide);
+    text-transform: uppercase;
+    font-weight: 500;
+  }
+
+  /* ── Nav ────────────────────────────────────────────────────────────────── */
+  .site-nav__list { display: flex; gap: var(--s-6); align-items: center; }
+
+  .site-nav__link {
+    font-size: 0.9375rem;
+    font-weight: 500;
+    position: relative;
+    padding-block: var(--s-2);
+  }
+  .site-nav__link::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    width: 100%;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--d-base) var(--ease);
+  }
+  .site-nav__link:hover::after { transform: scaleX(1); }
+
+  /* ── Header CTA ─────────────────────────────────────────────────────────── */
+  .btn--header {
+    padding: 0.6rem 1.35rem;
+    font-size: 0.9375rem;
+    --btn-bg: rgba(255, 255, 255, 0.12);
+    --btn-fg: #fff;
+    --btn-bd: rgba(255, 255, 255, 0.5);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .btn--header:hover { --btn-bg: #fff; --btn-fg: var(--c-ink); --btn-bd: #fff; }
+
+  :is(.site-header--solid, .site-header.is-stuck) .btn--header {
+    --btn-bg: var(--c-sea);
+    --btn-fg: var(--c-bone);
+    --btn-bd: var(--c-sea);
+    backdrop-filter: none;
+  }
+  :is(.site-header--solid, .site-header.is-stuck) .btn--header:hover {
+    --btn-bg: var(--c-sea-deep);
+    --btn-bd: var(--c-sea-deep);
+    --btn-fg: var(--c-bone);
+  }
+
+  /* ── Mobile toggle ──────────────────────────────────────────────────────── */
+  .menu-toggle {
+    display: none;
+    width: 2.75rem;
+    height: 2.75rem;
+    border: 0;
+    background: transparent;
+    cursor: pointer;
+    padding: 0;
+    place-items: center;
+    align-content: center;
+    justify-items: center;
+    gap: 6px;
+  }
+  .menu-toggle__bar {
+    width: 22px;
+    height: 1.5px;
+    border-radius: 2px;
+    transition: transform var(--d-base) var(--ease), opacity var(--d-fast) var(--ease);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bar:first-child {
+    transform: translateY(3.75px) rotate(45deg);
+  }
+  .menu-toggle[aria-expanded='true'] .menu-toggle__bar:last-child {
+    transform: translateY(-3.75px) rotate(-45deg);
+  }
+
+  /* ── Mobile menu ────────────────────────────────────────────────────────── */
+  .mobile-menu {
+    position: absolute;
+    inset: var(--header-h) 0 auto 0;
+    background: var(--c-bone);
+    border-bottom: 1px solid var(--line);
+    box-shadow: var(--sh-lg);
+    padding: var(--s-4) var(--gutter) var(--s-6);
+  }
+  .mobile-menu[hidden] { display: none; }
+
+  .mobile-menu__list { display: grid; gap: var(--s-1); }
+  .mobile-menu__link {
+    display: block;
+    padding: var(--s-4) var(--s-2);
+    font-size: var(--t-lg);
+    font-family: var(--font-display);
+    font-variation-settings: 'SOFT' 20, 'opsz' 24;
+    color: var(--c-ink);
+    border-bottom: 1px solid var(--line);
+  }
+  .mobile-menu__link--cta {
+    margin-top: var(--s-4);
+    border-bottom: 0;
+    color: var(--c-sea);
+    font-weight: 600;
+  }
+
+  @media (max-width: 60rem) {
+    .site-nav, .btn--header { display: none; }
+    .menu-toggle { display: grid; }
+  }
+</style>
+
+<script>
+  // ── Solid-on-scroll ─────────────────────────────────────────────────────────
+  // Only the home page floats the header over a hero; elsewhere `solid` is
+  // already set and this simply keeps it solid.
+  const header = document.querySelector<HTMLElement>('[data-header]');
+  if (header && !header.classList.contains('site-header--solid')) {
+    const sync = () => header.classList.toggle('is-stuck', window.scrollY > 24);
+    sync();
+    window.addEventListener('scroll', sync, { passive: true });
+  }
+
+  // ── Mobile menu ─────────────────────────────────────────────────────────────
+  const toggle = document.querySelector<HTMLButtonElement>('[data-menu-toggle]');
+  const menu = document.querySelector<HTMLElement>('[data-menu]');
+
+  if (toggle && menu) {
+    const setOpen = (open: boolean) => {
+      toggle.setAttribute('aria-expanded', String(open));
+      menu.hidden = !open;
+    };
+
+    toggle.addEventListener('click', () => {
+      setOpen(toggle.getAttribute('aria-expanded') !== 'true');
+    });
+
+    // Tapping a link navigates; close so the menu is not covering the target.
+    menu.addEventListener('click', (e) => {
+      if ((e.target as HTMLElement).closest('a')) setOpen(false);
+    });
+
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && toggle.getAttribute('aria-expanded') === 'true') {
+        setOpen(false);
+        toggle.focus();
+      }
+    });
+
+    // Reset when the layout crosses back to desktop, so the menu is never
+    // left hidden-but-open in a state the toggle no longer controls.
+    const mq = window.matchMedia('(min-width: 60.0625rem)');
+    mq.addEventListener('change', (e) => { if (e.matches) setOpen(false); });
+  }
+</script>

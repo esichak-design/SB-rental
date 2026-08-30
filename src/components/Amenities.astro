@@ -1,0 +1,70 @@
+---
+import { amenities } from '../data/site';
+---
+
+<section class="amenities section" id="amenities" aria-labelledby="amenities-title">
+  <div class="container container--wide">
+    <div class="section-head reveal">
+      <p class="eyebrow">Amenities</p>
+      <h2 class="h2" id="amenities-title">What's here</h2>
+      <p class="lede">
+        The full list, including the things that are easy to forget to ask about.
+      </p>
+    </div>
+
+    <div class="amenities__grid reveal reveal--stagger">
+      {amenities.map((group, i) => (
+        <section class="amenity" style={`--i:${i}`}>
+          <h3 class="amenity__title">{group.title}</h3>
+          <ul class="amenity__list">
+            {group.items.map((item) => (
+              <li class="amenity__item">
+                <svg class="amenity__tick" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                  <path d="M3 8l3.2 3.2L12 4.6" stroke="currentColor" stroke-width="1.6"
+                        stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .amenities__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--s-8) var(--s-7);
+  }
+
+  .amenity__title {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 24;
+    letter-spacing: var(--ls-snug);
+    padding-bottom: var(--s-4);
+    margin-bottom: var(--s-5);
+    border-bottom: 1px solid var(--line);
+  }
+
+  .amenity__list { display: grid; gap: var(--s-3); }
+
+  .amenity__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-3);
+    align-items: start;
+    font-size: 0.9688rem;
+    line-height: var(--lh-normal);
+    color: var(--text-muted);
+  }
+
+  .amenity__tick {
+    color: var(--c-sea-mid);
+    margin-top: 0.2em;
+    flex-shrink: 0;
+  }
+</style>

@@ -1,0 +1,19 @@
+---
+import Base from '../layouts/Base.astro';
+import PageHeader from '../components/PageHeader.astro';
+import Gallery from '../components/Gallery.astro';
+import { photos } from '../data/site';
+---
+
+<Base
+  title="Gallery"
+  description={`${photos.length} photos of the condo — every room, the balcony, the pool deck, and the beach.`}
+  solidHeader
+>
+  <PageHeader
+    eyebrow="Gallery"
+    title="The whole place"
+    lede="Every room, the balcony, the pool deck, and the walk down to the sand. Click any photo to see it larger."
+  />
+  <Gallery />
+</Base>

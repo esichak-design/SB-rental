@@ -1,0 +1,447 @@
+---
+import { photos, galleryTags } from '../data/site';
+
+// Only offer a filter for groups that actually contain photos.
+const activeTags = galleryTags.filter((tag) =>
+  photos.some((photo) => photo.tags?.includes(tag.id)),
+);
+---
+
+<section class="gallery" aria-labelledby="gallery-title">
+  <h2 class="visually-hidden" id="gallery-title">Photo gallery</h2>
+
+  {activeTags.length > 1 && (
+    <div class="container container--wide">
+      <div class="filters" role="group" aria-label="Filter photos">
+        <button class="filter is-active" type="button" data-filter="all" aria-pressed="true">
+          All
+          <span class="filter__count">{photos.length}</span>
+        </button>
+        {activeTags.map((tag) => {
+          const count = photos.filter((p) => p.tags?.includes(tag.id)).length;
+          return (
+            <button class="filter" type="button" data-filter={tag.id} aria-pressed="false">
+              {tag.label}
+              <span class="filter__count">{count}</span>
+            </button>
+          );
+        })}
+      </div>
+    </div>
+  )}
+
+  <div class="container container--wide">
+    <ul class="grid" data-grid>
+      {photos.map((photo, i) => (
+        <li
+          class:list={['grid__cell', { 'grid__cell--tall': photo.orientation === 'portrait' }]}
+          data-tags={(photo.tags ?? []).join(' ')}
+        >
+          <button
+            class="grid__btn frame frame--zoom"
+            type="button"
+            data-index={i}
+            aria-label={`View larger: ${photo.alt}`}
+          >
+            <img src={photo.src} alt={photo.alt} loading={i < 4 ? 'eager' : 'lazy'} decoding="async" />
+            <span class="grid__expand" aria-hidden="true">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+                <path d="M6 2H2v4M10 2h4v4M10 14h4v-4M6 14H2v-4" stroke="currentColor"
+                      stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </span>
+          </button>
+        </li>
+      ))}
+    </ul>
+
+    <p class="grid__empty" data-empty hidden>No photos in this group yet.</p>
+  </div>
+</section>
+
+{/* ── Lightbox ───────────────────────────────────────────────────────────── */}
+<div class="lightbox" data-lightbox hidden>
+  <div class="lightbox__backdrop" data-close></div>
+
+  <div class="lightbox__dialog" role="dialog" aria-modal="true" aria-label="Photo viewer">
+    <button class="lightbox__btn lightbox__btn--close" type="button" data-close>
+      <span class="visually-hidden">Close</span>
+      <svg width="20" height="20" viewBox="0 0 20 20" fill="none" aria-hidden="true">
+        <path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/>
+      </svg>
+    </button>
+
+    <button class="lightbox__btn lightbox__btn--prev" type="button" data-prev>
+      <span class="visually-hidden">Previous photo</span>
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M13.5 4L6.5 11l7 7" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+
+    <figure class="lightbox__figure">
+      <img class="lightbox__img" data-lightbox-img src="" alt="" />
+      <figcaption class="lightbox__caption">
+        <span data-lightbox-caption></span>
+        <span class="lightbox__counter" data-lightbox-counter></span>
+      </figcaption>
+    </figure>
+
+    <button class="lightbox__btn lightbox__btn--next" type="button" data-next>
+      <span class="visually-hidden">Next photo</span>
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" aria-hidden="true">
+        <path d="M8.5 4l7 7-7 7" stroke="currentColor" stroke-width="1.7"
+              stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </button>
+  </div>
+</div>
+
+<script is:inline define:vars={{ photoData: photos }}>
+  window.__galleryPhotos = photoData;
+</script>
+
+<style>
+  .gallery { padding-bottom: var(--section-y); }
+
+  /* ── Filters ────────────────────────────────────────────────────────────── */
+  .filters {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--s-2);
+    margin-bottom: var(--s-7);
+  }
+
+  .filter {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--s-2);
+    padding: 0.55rem 1.1rem;
+    border: 1px solid var(--c-driftwood);
+    border-radius: var(--r-full);
+    background: transparent;
+    color: var(--text-muted);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--d-fast) var(--ease), color var(--d-fast) var(--ease),
+                border-color var(--d-fast) var(--ease);
+  }
+  .filter:hover { border-color: var(--c-sea); color: var(--c-sea); }
+
+  .filter.is-active {
+    background: var(--c-sea);
+    border-color: var(--c-sea);
+    color: var(--c-bone);
+  }
+
+  .filter__count {
+    font-size: var(--t-xs);
+    opacity: 0.65;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* ── Grid ───────────────────────────────────────────────────────────────── */
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(21rem, 100%), 1fr));
+    grid-auto-rows: 14rem;
+    gap: var(--s-4);
+  }
+
+  .grid__cell { grid-row: span 2; }
+  .grid__cell--tall { grid-row: span 3; }
+  .grid__cell[hidden] { display: none; }
+
+  .grid__btn {
+    position: relative;
+    display: block;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: 0;
+    cursor: zoom-in;
+    background: var(--c-shell);
+  }
+
+  .grid__expand {
+    position: absolute;
+    top: var(--s-3);
+    right: var(--s-3);
+    display: grid;
+    place-items: center;
+    width: 2.1rem;
+    height: 2.1rem;
+    border-radius: var(--r-full);
+    background: rgba(11, 20, 27, 0.45);
+    color: #fff;
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    opacity: 0;
+    transform: scale(0.85);
+    transition: opacity var(--d-base) var(--ease), transform var(--d-base) var(--ease);
+  }
+  .grid__btn:hover .grid__expand,
+  .grid__btn:focus-visible .grid__expand { opacity: 1; transform: scale(1); }
+
+  .grid__empty {
+    padding-block: var(--s-9);
+    text-align: center;
+    color: var(--text-subtle);
+  }
+  .grid__empty[hidden] { display: none; }
+
+  /* ── Lightbox ───────────────────────────────────────────────────────────── */
+  .lightbox {
+    position: fixed;
+    inset: 0;
+    z-index: var(--z-lightbox);
+    display: grid;
+    place-items: center;
+    padding: clamp(var(--s-3), 3vw, var(--s-7));
+  }
+  .lightbox[hidden] { display: none; }
+
+  .lightbox__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgba(8, 15, 20, 0.93);
+    backdrop-filter: blur(6px);
+    -webkit-backdrop-filter: blur(6px);
+    animation: fade var(--d-base) var(--ease);
+    cursor: zoom-out;
+  }
+
+  .lightbox__dialog {
+    position: relative;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    gap: clamp(var(--s-2), 2vw, var(--s-5));
+    width: 100%;
+    max-width: var(--w-wide);
+    animation: pop var(--d-base) var(--ease-out);
+  }
+
+  @keyframes fade { from { opacity: 0; } to { opacity: 1; } }
+  @keyframes pop {
+    from { opacity: 0; transform: scale(0.97); }
+    to   { opacity: 1; transform: none; }
+  }
+
+  .lightbox__figure {
+    display: grid;
+    gap: var(--s-4);
+    justify-items: center;
+    min-width: 0;
+  }
+
+  .lightbox__img {
+    max-width: 100%;
+    max-height: min(78svh, 54rem);
+    width: auto;
+    border-radius: var(--r-md);
+    box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+    background: var(--c-ink);
+  }
+
+  .lightbox__caption {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: center;
+    gap: var(--s-2) var(--s-4);
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 0.9375rem;
+    text-align: center;
+    max-width: 46rem;
+  }
+
+  .lightbox__counter {
+    font-size: var(--t-sm);
+    color: rgba(255, 255, 255, 0.5);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .lightbox__btn {
+    display: grid;
+    place-items: center;
+    width: 3rem;
+    height: 3rem;
+    border: 1px solid rgba(255, 255, 255, 0.22);
+    border-radius: var(--r-full);
+    background: rgba(255, 255, 255, 0.08);
+    color: #fff;
+    cursor: pointer;
+    transition: background var(--d-fast) var(--ease), border-color var(--d-fast) var(--ease);
+  }
+  .lightbox__btn:hover {
+    background: rgba(255, 255, 255, 0.18);
+    border-color: rgba(255, 255, 255, 0.45);
+  }
+
+  .lightbox__btn--close {
+    position: absolute;
+    top: 0;
+    right: 0;
+    translate: 0 -3.75rem;
+    z-index: 1;
+  }
+
+  @media (max-width: 44rem) {
+    .lightbox__dialog { grid-template-columns: 1fr; }
+    .lightbox__figure { order: -1; }
+    .lightbox__btn--prev, .lightbox__btn--next {
+      position: absolute;
+      top: 50%;
+      translate: 0 -50%;
+    }
+    .lightbox__btn--prev { left: 0; }
+    .lightbox__btn--next { right: 0; }
+    .lightbox__btn--close { translate: 0 -3.25rem; }
+  }
+</style>
+
+<script>
+  // ── Gallery: filtering + lightbox ───────────────────────────────────────────
+  interface GalleryPhoto {
+    src: string;
+    alt: string;
+    caption?: string;
+    tags?: string[];
+  }
+
+  const photos = ((window as any).__galleryPhotos ?? []) as GalleryPhoto[];
+  const grid = document.querySelector<HTMLElement>('[data-grid]');
+  const lightbox = document.querySelector<HTMLElement>('[data-lightbox]');
+
+  if (grid && lightbox) {
+    const cells = Array.from(grid.querySelectorAll<HTMLElement>('.grid__cell'));
+    const emptyNote = document.querySelector<HTMLElement>('[data-empty]');
+    const filters = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-filter]'));
+
+    const img = lightbox.querySelector<HTMLImageElement>('[data-lightbox-img]')!;
+    const caption = lightbox.querySelector<HTMLElement>('[data-lightbox-caption]')!;
+    const counter = lightbox.querySelector<HTMLElement>('[data-lightbox-counter]')!;
+    const prevBtn = lightbox.querySelector<HTMLButtonElement>('[data-prev]')!;
+    const nextBtn = lightbox.querySelector<HTMLButtonElement>('[data-next]')!;
+
+    // Indices currently visible, in DOM order. The lightbox walks this list, so
+    // arrowing through a filtered gallery stays inside the filter.
+    let visible: number[] = photos.map((_, i) => i);
+    let position = 0;
+    let lastFocused: HTMLElement | null = null;
+
+    /* ── Filtering ─────────────────────────────────────────────────────────── */
+
+    const applyFilter = (tag: string) => {
+      visible = [];
+
+      cells.forEach((cell, i) => {
+        const tags = (cell.dataset.tags ?? '').split(' ').filter(Boolean);
+        const show = tag === 'all' || tags.includes(tag);
+        cell.hidden = !show;
+        if (show) visible.push(i);
+      });
+
+      if (emptyNote) emptyNote.hidden = visible.length > 0;
+
+      filters.forEach((btn) => {
+        const active = btn.dataset.filter === tag;
+        btn.classList.toggle('is-active', active);
+        btn.setAttribute('aria-pressed', String(active));
+      });
+    };
+
+    filters.forEach((btn) => {
+      btn.addEventListener('click', () => applyFilter(btn.dataset.filter ?? 'all'));
+    });
+
+    /* ── Lightbox ──────────────────────────────────────────────────────────── */
+
+    const render = () => {
+      const photo = photos[visible[position]];
+      if (!photo) return;
+      img.src = photo.src;
+      img.alt = photo.alt;
+      caption.textContent = photo.caption ?? photo.alt;
+      counter.textContent = `${position + 1} / ${visible.length}`;
+
+      // With one photo showing there is nowhere to step to.
+      const single = visible.length < 2;
+      prevBtn.hidden = single;
+      nextBtn.hidden = single;
+    };
+
+    const step = (delta: number) => {
+      if (visible.length === 0) return;
+      position = (position + delta + visible.length) % visible.length;
+      render();
+    };
+
+    const open = (index: number) => {
+      const at = visible.indexOf(index);
+      if (at === -1) return;
+      position = at;
+      lastFocused = document.activeElement as HTMLElement;
+      render();
+      lightbox.hidden = false;
+      document.body.style.overflow = 'hidden';
+      // Target the close button, not the backdrop — both carry `data-close`,
+      // and the backdrop comes first in document order but cannot take focus.
+      lightbox.querySelector<HTMLButtonElement>('button[data-close]')?.focus();
+    };
+
+    const close = () => {
+      lightbox.hidden = true;
+      document.body.style.overflow = '';
+      img.src = '';
+      lastFocused?.focus();
+      lastFocused = null;
+    };
+
+    grid.addEventListener('click', (event) => {
+      const btn = (event.target as HTMLElement).closest<HTMLElement>('[data-index]');
+      if (btn) open(Number(btn.dataset.index));
+    });
+
+    lightbox.addEventListener('click', (event) => {
+      if ((event.target as HTMLElement).closest('[data-close]')) close();
+    });
+    prevBtn.addEventListener('click', () => step(-1));
+    nextBtn.addEventListener('click', () => step(1));
+
+    document.addEventListener('keydown', (event) => {
+      if (lightbox.hidden) return;
+
+      if (event.key === 'Escape') { close(); return; }
+      if (event.key === 'ArrowLeft') { event.preventDefault(); step(-1); return; }
+      if (event.key === 'ArrowRight') { event.preventDefault(); step(1); return; }
+
+      // Keep Tab inside the dialog while it is open.
+      if (event.key === 'Tab') {
+        const focusable = Array.from(
+          lightbox.querySelectorAll<HTMLElement>('button:not([hidden])'),
+        );
+        if (focusable.length === 0) return;
+        const first = focusable[0];
+        const last = focusable[focusable.length - 1];
+        if (event.shiftKey && document.activeElement === first) {
+          event.preventDefault();
+          last.focus();
+        } else if (!event.shiftKey && document.activeElement === last) {
+          event.preventDefault();
+          first.focus();
+        }
+      }
+    });
+
+    // Swipe between photos on touch devices.
+    let touchX = 0;
+    lightbox.addEventListener('touchstart', (e) => { touchX = e.changedTouches[0].clientX; }, { passive: true });
+    lightbox.addEventListener('touchend', (e) => {
+      const delta = e.changedTouches[0].clientX - touchX;
+      if (Math.abs(delta) > 50) step(delta < 0 ? 1 : -1);
+    }, { passive: true });
+  }
+</script>

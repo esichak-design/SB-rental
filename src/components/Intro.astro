@@ -1,0 +1,51 @@
+---
+import { intro } from '../data/site';
+---
+
+<section class="intro section" id="the-condo">
+  <div class="container container--wide intro__grid">
+    <div class="intro__text reveal">
+      <p class="eyebrow">{intro.eyebrow}</p>
+      <h2 class="h1 intro__headline">{intro.headline}</h2>
+      <div class="prose intro__prose">
+        {intro.body.map((para) => <p>{para}</p>)}
+      </div>
+      <a class="link intro__link" href="/gallery">
+        Browse the full gallery
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+          <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"
+                stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </a>
+    </div>
+
+    <figure class="intro__media reveal">
+      <div class="frame frame--tall">
+        <img src={intro.image} alt={intro.imageAlt} width="1500" height="2000" loading="lazy" decoding="async" />
+      </div>
+    </figure>
+  </div>
+</section>
+
+<style>
+  .intro__grid {
+    display: grid;
+    grid-template-columns: 1fr 0.82fr;
+    gap: clamp(var(--s-7), 6vw, var(--s-11));
+    align-items: center;
+  }
+
+  .intro__headline { margin-top: var(--s-2); max-width: 14ch; }
+  .intro__prose { margin-top: var(--s-6); }
+  .intro__link { margin-top: var(--s-6); }
+
+  /* Nudge the image below the optical centre — it reads as intentional
+     rather than as a mis-aligned two-column block. */
+  .intro__media { margin-top: var(--s-8); }
+
+  @media (max-width: 56rem) {
+    .intro__grid { grid-template-columns: 1fr; }
+    .intro__media { margin-top: 0; max-width: 30rem; }
+    .intro__headline { max-width: 18ch; }
+  }
+</style>

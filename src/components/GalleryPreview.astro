@@ -1,0 +1,73 @@
+---
+import { photos } from '../data/site';
+
+// A hand-picked spread for the teaser; the full set lives on /gallery.
+const featured = photos.slice(0, 5);
+---
+
+<section class="preview section" aria-labelledby="preview-title">
+  <div class="container container--wide">
+    <div class="preview__head reveal">
+      <div>
+        <p class="eyebrow">Gallery</p>
+        <h2 class="h2" id="preview-title">Have a look around</h2>
+      </div>
+      <a class="btn btn--ghost preview__all" href="/gallery">
+        All {photos.length} photos
+      </a>
+    </div>
+  </div>
+
+  <ul class="preview__strip reveal">
+    {featured.map((photo, i) => (
+      <li class="preview__cell" style={`--i:${i}`}>
+        <a class="preview__link frame frame--zoom" href="/gallery" aria-label={`${photo.alt} — open the gallery`}>
+          <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+        </a>
+      </li>
+    ))}
+  </ul>
+</section>
+
+<style>
+  .preview__head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: var(--s-5);
+    margin-bottom: var(--s-8);
+  }
+
+  /* A horizontally scrolling strip that bleeds off both edges — it signals
+     "there are more of these" better than a boxed grid does. */
+  .preview__strip {
+    display: flex;
+    gap: var(--s-4);
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    padding-inline: var(--gutter);
+    padding-bottom: var(--s-3);
+    scrollbar-width: thin;
+    scrollbar-color: var(--c-driftwood) transparent;
+  }
+  .preview__strip::-webkit-scrollbar { height: 6px; }
+  .preview__strip::-webkit-scrollbar-thumb {
+    background: var(--c-driftwood);
+    border-radius: var(--r-full);
+  }
+
+  .preview__cell {
+    flex: 0 0 clamp(16rem, 30vw, 26rem);
+    scroll-snap-align: start;
+  }
+
+  .preview__link {
+    display: block;
+    aspect-ratio: 4 / 3;
+    border-radius: var(--r-lg);
+  }
+
+  @media (max-width: 40rem) {
+    .preview__head { flex-direction: column; align-items: flex-start; }
+  }
+</style>
