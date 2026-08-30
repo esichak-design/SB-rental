@@ -29,7 +29,8 @@ const SCENES = {
   'second-bath':     { w: 2000, h: 1500, room: ['#f5f7f6', '#d6dedc'], accent: '#adbcb9', label: 'Second bath' },
   'views':           { w: 2000, h: 1500, sky: ['#cfe2ea', '#9dc0cf', '#7aa5b6'], sea: ['#2f6879', '#1a4553'], horizon: 0.5,  label: 'Ocean views' },
   'terrace':         { w: 2000, h: 1500, sky: ['#d8e8ee', '#a6c8d4', '#84aebc'], sea: ['#356d7a', '#1e4b57'], horizon: 0.58, label: 'Outdoor space' },
-  'pool':            { w: 2000, h: 1500, room: ['#dcecef', '#8dbcc6'], accent: '#5e97a4', label: 'Community pool' },
+  'pool':            { w: 2000, h: 1500, room: ['#dcecef', '#8dbcc6'], accent: '#5e97a4', label: 'Pool & spa' },
+  'office':          { w: 2000, h: 1500, room: ['#f7f4ee', '#ded5c6'], accent: '#c0b39d', label: 'Desk nook & laundry' },
   'beach':           { w: 1500, h: 2000, sky: ['#dceaef', '#a8cbd5', '#e8dcc4'], sea: ['#4a8896', '#e3d6bd'], horizon: 0.45, label: 'Beach' },
 };
 

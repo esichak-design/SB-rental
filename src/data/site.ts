@@ -135,9 +135,9 @@ export const intro = {
   headline: 'Renovated, and built around the view',
   /** Each string becomes a paragraph. */
   body: [
-    'Perched on the bluffs overlooking the Pacific, the residence is filled with natural light and designed for relaxed, sophisticated coastal living. Approximately 1,500 square feet, two bedrooms, two and a half baths.',
-    'It has been extensively remodeled with high-end appliances, quality finishes, and custom furnishings throughout. The open-concept living and dining spaces suit entertaining, working remotely, or simply sitting with the ever-changing Pacific backdrop.',
-    'The kitchen is designed for both everyday living and entertaining, and the two bedroom suites are quiet, private retreats at the end of the day.',
+    'Perched on the bluffs above the Pacific, the residence is filled with natural light — vaulted ceilings with exposed beams, clerestory windows, and wide-plank oak floors throughout. Approximately 1,500 square feet across two levels, joined by a sculptural iron spiral staircase.',
+    'The remodel was thorough. A white-and-oak kitchen with quartz counters, a professional gas range, and an island that seats three. Fireplaces in both the living room and the primary suite. A built-in window seat, a tucked-away desk nook, and full-size laundry inside the residence rather than down a corridor.',
+    'Upstairs, the primary suite takes the gable end: a wall of glass framing the water, a fireplace at the foot of the bed, a double vanity, and a fitted walk-in closet. The second bedroom has its own bath and closet.',
   ],
   /** TODO: a bright interior shot with the view in it works well here. */
   image: '/images/living-room.svg',
@@ -153,7 +153,7 @@ export const suitedFor = {
   cases: [
     { title: 'Relocation', detail: 'Landing in San Diego and deciding where to settle.' },
     { title: 'Between homes', detail: 'A comfortable place to be while you buy, sell, or build.' },
-    { title: 'Working remotely', detail: 'Room to work, with a view worth looking up for.' },
+    { title: 'Working remotely', detail: 'A built-in desk nook, fast to settle into, with a view worth looking up for.' },
     { title: 'A seasonal residence', detail: 'An extended coastal escape rather than a hotel.' },
   ],
 };
@@ -169,50 +169,74 @@ export const amenities: AmenityGroup[] = [
   {
     title: 'The residence',
     items: [
-      'Approximately 1,500 square feet',
+      'Approximately 1,500 square feet over two levels',
       'Two bedrooms, two and a half bathrooms',
-      'Recently and extensively renovated',
-      'Open-concept living and dining',
-      'Filled with natural light',
+      'Vaulted ceilings with exposed beams',
+      'Wide-plank oak floors throughout',
+      'Iron and wood spiral staircase',
+      'Ceiling fans in every room',
     ],
   },
   {
     title: 'Kitchen',
     items: [
-      'High-end appliances throughout',
-      'Quality finishes',
-      'Designed for everyday living and entertaining',
+      'Professional stainless gas range with vented hood',
+      'Built-in stainless refrigerator',
+      'Quartz counters and full-slab backsplash',
+      'Oak island with seating for three',
+      'Shaker cabinetry with brass hardware',
+      'Opens to the dining area and the deck',
     ],
   },
   {
-    title: 'Finishes & furnishings',
+    title: 'Living & dining',
     items: [
-      'Custom furnishings throughout',
-      'Available furnished, semi-furnished, or unfurnished',
-      'Move-in ready as a turnkey residence',
+      'Gas fireplace with a reclaimed timber mantel',
+      'Built-in window seat with drawer storage',
+      'Clerestory windows above the main glazing',
+      'Dining table seating six, beside the deck doors',
+      'Ocean outlook from the living room',
     ],
   },
   {
-    title: 'Views & outlook',
+    title: 'Primary suite',
     items: [
-      'Spectacular Pacific Ocean views',
-      'Bluff-top position above the beach',
-      'Sunsets from home',
+      'Gable wall of glass framing the Pacific',
+      'Second gas fireplace',
+      'Vaulted, beamed ceiling',
+      'Double vanity in oak with brass fittings',
+      'Fitted walk-in closet',
+      'Mirrored wardrobe wall',
     ],
   },
   {
-    title: 'Community',
+    title: 'Second bedroom & baths',
     items: [
-      'Gated oceanfront community',
-      'Beach access',
-      'Community pool',
+      'Second bedroom with its own full bath',
+      'Fitted walk-in closet',
+      'Patterned tile floors and quartz vanities',
+      'Powder room on the main level',
     ],
   },
   {
-    title: 'Parking & storage',
+    title: 'Working & practical',
     items: [
+      'Built-in desk nook with oak panelling',
+      'Full-size stacked washer and dryer inside the residence',
+      'Generous built-in cabinetry and storage',
       'Two parking spaces',
       'Additional storage',
+    ],
+  },
+  {
+    title: 'Outside & community',
+    items: [
+      'Private gated entry patio',
+      'Gated oceanfront community',
+      'Community pool and spa, 8am – 10pm daily',
+      'Bluff-top lawns with benches over the water',
+      'Private stairs down to the sand',
+      'Pergola walkways and mature subtropical planting',
     ],
   },
 ];
@@ -231,37 +255,44 @@ export const rooms: Room[] = [
   {
     name: 'Living & Dining',
     detail:
-      'Open-concept and oriented to the water, with room to entertain, work, or sit and watch the Pacific change through the day.',
+      'A vaulted, beamed room under clerestory glass, with a gas fireplace, a built-in window seat, and doors out to the deck. The dining table sits between the kitchen and the glazing, so the whole level reads as one space.',
     image: '/images/living-room.svg',
-    imageAlt: 'The open-concept living and dining area facing the ocean',
+    imageAlt: 'The vaulted living room with fireplace and built-in window seat',
   },
   {
     name: 'Kitchen',
     detail:
-      'Remodeled with high-end appliances and quality finishes — designed for everyday cooking as much as for having people over.',
+      'White shaker cabinetry against an oak island, quartz counters and a full-slab backsplash, a professional gas range under a vented oak hood, and a built-in refrigerator. Three stools at the island; the deck is a step away.',
     image: '/images/kitchen.svg',
-    imageAlt: 'The renovated kitchen with high-end appliances',
+    imageAlt: 'The renovated kitchen with oak island and professional gas range',
   },
   {
     name: 'Primary Suite',
     detail:
-      'A private retreat with its own bath. Wake up to the ocean.',
+      'The gable end of the upper floor, given over to a wall of glass above the water. A fireplace at the foot of the bed, a beamed ceiling overhead, a double oak vanity, and a fitted walk-in closet.',
     image: '/images/primary-bedroom.svg',
-    imageAlt: 'The primary bedroom suite',
+    imageAlt: 'The primary suite with a gable window over the ocean and a fireplace',
   },
   {
-    name: 'Second Suite',
+    name: 'Second Bedroom',
     detail:
-      'The second bedroom suite, equally quiet and equally private, with its own bath.',
+      'Quiet and bright, with its own full bath and a fitted walk-in closet — as workable for guests as it is for a family.',
     image: '/images/second-bedroom.svg',
-    imageAlt: 'The second bedroom suite',
+    imageAlt: 'The second bedroom with two beds and its own bath',
   },
   {
-    name: 'Ocean Views',
+    name: 'Work & Utility',
     detail:
-      'Panoramic Pacific views from the bluff — surfers in the morning, sunsets in the evening.',
-    image: '/images/views.svg',
-    imageAlt: 'Panoramic Pacific Ocean views from the residence',
+      'A built-in desk nook panelled in oak, and full-size laundry inside the residence rather than shared down a corridor. Small things that matter over a longer stay.',
+    image: '/images/office.svg',
+    imageAlt: 'The built-in desk nook and in-residence laundry',
+  },
+  {
+    name: 'Outside',
+    detail:
+      'A private gated patio at the door. Beyond it, lawns running to the bluff edge, benches set over the water, a pool and spa, and private stairs down to the sand.',
+    image: '/images/terrace.svg',
+    imageAlt: 'The private entry patio and the bluff-top lawns beyond',
   },
 ];
 
@@ -294,14 +325,15 @@ export const photos: Photo[] = [
 export const location = {
   eyebrow: 'Location',
   headline: 'A block from Cedros',
-  body: 'A gated oceanfront community on one of North County San Diego’s most desirable stretches of coastline, with the Cedros Avenue Design District a short walk away.',
+  body: 'Seascape Shores is a gated oceanfront community on one of North County San Diego’s most desirable stretches of coastline — lawns to the bluff edge, private stairs to the sand, and the Cedros Avenue Design District a short walk away.',
   /**
    * `distance` is optional. Where an exact figure was not supplied it is left
    * off rather than guessed — add real numbers as you confirm them.
    */
   nearby: [
-    { name: 'The beach', detail: 'Community beach access', distance: 'On site' },
-    { name: 'Community pool', detail: 'Within the gated community', distance: 'On site' },
+    { name: 'The beach', detail: 'Private stairs from the bluff', distance: 'On site' },
+    { name: 'Pool & spa', detail: 'Open 8am – 10pm daily', distance: 'On site' },
+    { name: 'Bluff-top lawns', detail: 'Benches over the water', distance: 'On site' },
     { name: 'Cedros Avenue Design District', detail: 'Shops, galleries, dining', distance: 'About 1 block' },
     { name: 'Gyms & fitness studios', detail: 'State-of-the-art facilities nearby' },
     { name: 'Surfing, hiking & cycling', detail: 'Scenic coastal trails' },
