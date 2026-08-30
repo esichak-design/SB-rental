@@ -1,4 +1,5 @@
 ---
+import Photo from './Photo.astro';
 import { intro } from '../data/site';
 ---
 
@@ -21,7 +22,7 @@ import { intro } from '../data/site';
 
     <figure class="intro__media reveal">
       <div class="frame frame--tall">
-        <img src={intro.image} alt={intro.imageAlt} width="1500" height="2000" loading="lazy" decoding="async" />
+        <Photo name={intro.image} alt={intro.imageAlt} sizes="(max-width: 56rem) 90vw, 40vw" />
       </div>
     </figure>
   </div>

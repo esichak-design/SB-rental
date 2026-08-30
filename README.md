@@ -40,32 +40,46 @@ Anything still marked `TODO:` in that file is waiting on you.
    - `location.nearby` — add real drive times where they're missing
 2. **`astro.config.mjs`** — set `site` to your real domain.
 3. **`public/robots.txt`** — update the `Sitemap:` host to match.
-4. **Photos** — see below.
-5. **Inquiry form** — see below.
+4. **Inquiry form** — see below.
 
 ## Photos
 
-The site ships with generated SVG placeholders so it looks complete before the
-real photography lands. Each is labelled with the room it stands in for.
+The 51 listing photos live in `src/assets/photos/` and are referenced from
+`src/data/site.ts` by **bare filename** — `living-room.jpg`, not a path.
 
-To use real photos:
+Astro processes them at build time: WebP variants at 640 / 1024 / native width,
+a JPEG fallback, a responsive `srcset`, and intrinsic dimensions baked in so
+pages do not shift as images load. A filename that does not exist fails the
+build with a message naming it, rather than shipping a broken image to a
+visitor.
 
-1. Drop the files into `public/images/` (JPG or WebP, roughly **2000px on the
-   long edge**).
-2. Point the matching `src` in `src/data/site.ts` at them, e.g.
-   `/images/living-room.jpg`.
-3. Write a real `alt` for each. It is what screen-reader users hear and what
-   search engines read.
-4. Delete the `.svg` placeholder it replaced.
-
-Mark tall photos `orientation: 'portrait'` for a taller gallery cell. The `tags`
-control which gallery filter a photo appears under.
-
-Regenerate placeholders after editing the list:
+To add or replace photos:
 
 ```bash
-node scripts/generate-placeholders.mjs
+cp /path/to/new-photos/*.jpg public/images/
+node scripts/ingest-photos.mjs
 ```
+
+The script moves them into `src/assets/photos/`, caps the long edge at 2560px,
+re-encodes at quality 82, applies any EXIF rotation and then strips the
+metadata (camera EXIF can carry GPS coordinates, which has no place on a public
+page about a home), and prints starter entries for `site.ts`.
+
+Then add each one to `photos` in `site.ts` with a real `alt` and its `tags`.
+Tags drive the gallery filters: `living`, `kitchen`, `bedrooms`, `bath`,
+`workspace`, `outdoor`, `views`, `building`.
+
+### A note on image formats
+
+The build emits **WebP only, deliberately.** Measured on this property's own
+photography at 1280px: JPEG 98KB, WebP 65KB, AVIF 59KB — but WebP encodes in
+0.2s against AVIF's 4.4s. Adding AVIF bought a further 9% for roughly 25x the
+build time: a cold build went from 9 seconds to 105. Worth revisiting only if
+the photos are ever re-exported much larger, where AVIF's advantage widens.
+
+The current sources are 1280px on the long edge, which is comfortable
+everywhere on the site except the full-bleed hero, where a larger export would
+look crisper on a high-density desktop display.
 
 ## The inquiry form
 
@@ -102,7 +116,9 @@ significant financial decision.
 
 ```
 src/
+├── assets/photos/        ← the 51 listing photos
 ├── data/site.ts          ← all content lives here
+├── lib/photos.ts         ← resolves a filename to a processed asset
 ├── styles/
 │   ├── tokens.css        ← colours, type scale, spacing, motion
 │   ├── fonts.css         ← self-hosted @font-face rules
@@ -114,7 +130,6 @@ src/
     ├── gallery.astro     ← full gallery + lightbox
     └── 404.astro
 public/
-├── images/               ← photos (placeholders for now)
 └── fonts/                ← Fraunces + Inter, self-hosted
 ```
 

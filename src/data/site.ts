@@ -15,7 +15,7 @@
  */
 
 export interface Photo {
-  /** Path under /public — e.g. "/images/living-room.jpg" */
+  /** Filename inside src/assets/photos — e.g. "living-room.jpg". No path. */
   src: string;
   /** Describe the photo for screen readers and SEO. Not optional — please write one. */
   alt: string;
@@ -27,13 +27,22 @@ export interface Photo {
   orientation?: 'landscape' | 'portrait';
 }
 
-export type GalleryTag = 'living' | 'kitchen' | 'bedrooms' | 'bath' | 'outdoor' | 'views' | 'building';
+export type GalleryTag =
+  | 'living'
+  | 'kitchen'
+  | 'bedrooms'
+  | 'bath'
+  | 'workspace'
+  | 'outdoor'
+  | 'views'
+  | 'building';
 
 export const galleryTags: { id: GalleryTag; label: string }[] = [
   { id: 'living', label: 'Living' },
   { id: 'kitchen', label: 'Kitchen & Dining' },
   { id: 'bedrooms', label: 'Bedrooms' },
   { id: 'bath', label: 'Baths' },
+  { id: 'workspace', label: 'Work & Utility' },
   { id: 'outdoor', label: 'Outdoor' },
   { id: 'views', label: 'Ocean views' },
   { id: 'building', label: 'Community & Beach' },
@@ -112,9 +121,9 @@ export const hero = {
   headline: 'Perched above the Pacific',
   subhead:
     'A renovated two-bedroom oceanfront residence on the Solana Beach bluffs. Wake to panoramic ocean views, watch the surfers with your morning coffee, and take the sunsets from home.',
-  /** TODO: replace with your best wide, bright ocean-view photo. */
-  image: '/images/hero.svg',
-  imageAlt: 'The Pacific Ocean at golden hour, seen from the residence',
+  /** TODO: your best wide, bright ocean-view photo. Bare filename. */
+  image: 'primary-bedroom-twilight.jpg',
+  imageAlt: 'The primary bedroom at dusk, its gable window filled with a sunset over the Pacific',
   cta: { label: 'Inquire about leasing', href: '#inquire' },
   secondaryCta: { label: 'See the residence', href: '/gallery' },
 };
@@ -140,8 +149,8 @@ export const intro = {
     'Upstairs, the primary suite takes the gable end: a wall of glass framing the water, a fireplace at the foot of the bed, a double vanity, and a fitted walk-in closet. The second bedroom has its own bath and closet.',
   ],
   /** TODO: a bright interior shot with the view in it works well here. */
-  image: '/images/living-room.svg',
-  imageAlt: 'The open-concept living room, looking out to the Pacific',
+  image: 'living-room-ocean.jpg',
+  imageAlt: 'The living room under its vaulted ceiling, with the ocean beyond',
 };
 
 /* ── Who it suits ─────────────────────────────────────────────────────────── */
@@ -256,43 +265,43 @@ export const rooms: Room[] = [
     name: 'Living & Dining',
     detail:
       'A vaulted, beamed room under clerestory glass, with a gas fireplace, a built-in window seat, and doors out to the deck. The dining table sits between the kitchen and the glazing, so the whole level reads as one space.',
-    image: '/images/living-room.svg',
-    imageAlt: 'The vaulted living room with fireplace and built-in window seat',
+    image: 'living-room-fireplace.jpg',
+    imageAlt: 'The vaulted living room with its fireplace and built-in window seat',
   },
   {
     name: 'Kitchen',
     detail:
       'White shaker cabinetry against an oak island, quartz counters and a full-slab backsplash, a professional gas range under a vented oak hood, and a built-in refrigerator. Three stools at the island; the deck is a step away.',
-    image: '/images/kitchen.svg',
+    image: 'kitchen.jpg',
     imageAlt: 'The renovated kitchen with oak island and professional gas range',
   },
   {
     name: 'Primary Suite',
     detail:
       'The gable end of the upper floor, given over to a wall of glass above the water. A fireplace at the foot of the bed, a beamed ceiling overhead, a double oak vanity, and a fitted walk-in closet.',
-    image: '/images/primary-bedroom.svg',
-    imageAlt: 'The primary suite with a gable window over the ocean and a fireplace',
+    image: 'primary-bedroom-day.jpg',
+    imageAlt: 'The primary suite with its gable window over the ocean and a fireplace',
   },
   {
     name: 'Second Bedroom',
     detail:
       'Quiet and bright, with its own full bath and a fitted walk-in closet — as workable for guests as it is for a family.',
-    image: '/images/second-bedroom.svg',
+    image: 'second-bedroom.jpg',
     imageAlt: 'The second bedroom with two beds and its own bath',
   },
   {
     name: 'Work & Utility',
     detail:
       'A built-in desk nook panelled in oak, and full-size laundry inside the residence rather than shared down a corridor. Small things that matter over a longer stay.',
-    image: '/images/office.svg',
-    imageAlt: 'The built-in desk nook and in-residence laundry',
+    image: 'laundry.jpg',
+    imageAlt: 'The built-in desk nook beside the in-residence laundry',
   },
   {
     name: 'Outside',
     detail:
       'A private gated patio at the door. Beyond it, lawns running to the bluff edge, benches set over the water, a pool and spa, and private stairs down to the sand.',
-    image: '/images/terrace.svg',
-    imageAlt: 'The private entry patio and the bluff-top lawns beyond',
+    image: 'bluff-benches.jpg',
+    imageAlt: 'Benches at the bluff edge looking out over the Pacific',
   },
 ];
 
@@ -301,23 +310,75 @@ export const rooms: Room[] = [
 /**
  * TODO: replace every entry below with the real photos.
  *
- * Drop the files into `public/images/` and point `src` at them, e.g.
- * `/images/living-room-01.jpg`. Write a real `alt` for each one — it is what
- * screen-reader users hear and what search engines read.
+ * Drop the files into `src/assets/photos/` and name them in `src` — the bare
+ * filename, e.g. `living-room-01.jpg`. Astro generates the AVIF/WebP variants
+ * and the responsive srcset from there; a missing filename fails the build with
+ * a message naming it, rather than shipping a broken image.
+ *
+ * Write a real `alt` for each one — it is what screen-reader users hear and
+ * what search engines read.
  */
 export const photos: Photo[] = [
-  { src: '/images/hero.svg', alt: 'Sunset over the Pacific from the residence', tags: ['views'], caption: 'Sunsets, from home.' },
-  { src: '/images/living-room.svg', alt: 'Open-concept living room facing the ocean', tags: ['living'] },
-  { src: '/images/kitchen.svg', alt: 'Renovated kitchen with high-end appliances', tags: ['kitchen'] },
-  { src: '/images/dining.svg', alt: 'Dining area', tags: ['kitchen'] },
-  { src: '/images/primary-bedroom.svg', alt: 'Primary bedroom suite', tags: ['bedrooms'] },
-  { src: '/images/second-bedroom.svg', alt: 'Second bedroom suite', tags: ['bedrooms'], orientation: 'portrait' },
-  { src: '/images/primary-bath.svg', alt: 'Primary en-suite bathroom', tags: ['bath'], orientation: 'portrait' },
-  { src: '/images/second-bath.svg', alt: 'Second full bathroom', tags: ['bath'] },
-  { src: '/images/views.svg', alt: 'Panoramic Pacific Ocean views', tags: ['views', 'outdoor'] },
-  { src: '/images/terrace.svg', alt: 'Outdoor space overlooking the ocean', tags: ['outdoor'] },
-  { src: '/images/pool.svg', alt: 'The community pool', tags: ['building'] },
-  { src: '/images/beach.svg', alt: 'The beach below the bluff', tags: ['building', 'views'], orientation: 'portrait' },
+  // Living
+  { src: 'living-room-ocean.jpg', alt: 'The living room under a vaulted ceiling, with the ocean visible through the far window', tags: ['living', 'views'] },
+  { src: 'living-room-fireplace.jpg', alt: 'The living room fireplace with a reclaimed timber mantel and a television above', tags: ['living'] },
+  { src: 'living-room.jpg', alt: 'The living room seating area, with clerestory windows above the main glazing', tags: ['living'] },
+  { src: 'living-room-wide.jpg', alt: 'The full width of the living room, looking toward the window seat', tags: ['living'] },
+  { src: 'living-room-staircase.jpg', alt: 'The living room with the iron spiral staircase rising to the upper floor', tags: ['living'] },
+  { src: 'living-room-twilight.jpg', alt: 'The living room at dusk, the sky turning pink through the windows', tags: ['living', 'views'], caption: 'The living room as the light goes.' },
+  { src: 'kitchen-dining-stairs.jpg', alt: 'Looking across the dining table to the kitchen and the spiral staircase beyond', tags: ['living', 'kitchen'] },
+
+  // Kitchen & dining
+  { src: 'kitchen.jpg', alt: 'The kitchen, with an oak island, quartz counters and a professional gas range', tags: ['kitchen'] },
+  { src: 'kitchen-range.jpg', alt: 'The professional stainless gas range beneath an oak-trimmed vented hood', tags: ['kitchen'] },
+  { src: 'kitchen-island-dining.jpg', alt: 'The kitchen island and built-in refrigerator, with the dining area beyond', tags: ['kitchen'] },
+  { src: 'kitchen-seating.jpg', alt: 'Three stools at the kitchen island', tags: ['kitchen'] },
+  { src: 'dining.jpg', alt: 'The dining table against a panelled oak wall, open to the kitchen', tags: ['kitchen'] },
+
+  // Bedrooms
+  { src: 'primary-bedroom-twilight.jpg', alt: 'The primary bedroom at dusk, the gable window filled with a pink sunset over the Pacific', tags: ['bedrooms', 'views'], caption: 'The primary suite, facing the water.' },
+  { src: 'primary-bedroom-day.jpg', alt: 'The primary bedroom by day, a wall of glass framing the ocean beside the bed', tags: ['bedrooms', 'views'] },
+  { src: 'primary-bedroom.jpg', alt: 'The primary bedroom, with a fireplace set into the wall opposite the bed', tags: ['bedrooms'] },
+  { src: 'primary-bedroom-sitting.jpg', alt: 'The primary bedroom looking toward its sitting area under the vaulted ceiling', tags: ['bedrooms'] },
+  { src: 'second-bedroom.jpg', alt: 'The second bedroom, with two beds and a ceiling fan', tags: ['bedrooms'] },
+  { src: 'second-bedroom-beds.jpg', alt: 'The second bedroom from the doorway, looking toward its own bathroom', tags: ['bedrooms'] },
+  { src: 'second-bedroom-wide.jpg', alt: 'The second bedroom seen from the opposite corner', tags: ['bedrooms'] },
+
+  // Baths
+  { src: 'primary-bath.jpg', alt: 'The primary bathroom, with a double oak vanity and brass fittings', tags: ['bath'] },
+  { src: 'primary-bath-shower.jpg', alt: 'The primary walk-in shower, tiled floor to ceiling with a bench seat', tags: ['bath'] },
+  { src: 'primary-bath-closet.jpg', alt: 'The primary vanity beside the fitted walk-in closet', tags: ['bath'] },
+  { src: 'second-bath.jpg', alt: 'The second bathroom, with a walk-in shower and patterned tile floor', tags: ['bath'] },
+  { src: 'second-bath-vanity.jpg', alt: 'The second bathroom vanity, with its walk-in closet beyond', tags: ['bath'] },
+  { src: 'powder-room.jpg', alt: 'The powder room on the main level', tags: ['bath'] },
+
+  // Work & utility
+  { src: 'laundry.jpg', alt: 'The utility room: a full-size stacked washer and dryer beside a built-in desk', tags: ['workspace'] },
+  { src: 'desk-nook.jpg', alt: 'The built-in desk nook, panelled in oak', tags: ['workspace'] },
+  { src: 'laundry-desk-kitchen.jpg', alt: 'The utility room and desk nook, with the kitchen visible beyond', tags: ['workspace'] },
+
+  // Outdoor
+  { src: 'private-deck.jpg', alt: 'The private deck, with a table and stools among the planting', tags: ['outdoor'] },
+  { src: 'deck-rocker.jpg', alt: 'A rocking chair on the deck, the ocean visible past the hedge', tags: ['outdoor', 'views'] },
+  { src: 'entry.jpg', alt: 'The gated private entrance to the residence', tags: ['outdoor', 'building'] },
+
+  // Ocean views
+  { src: 'lawn-sunset.jpg', alt: 'The community lawn at sunset, the sky pink over the Pacific', tags: ['views'], caption: 'Evenings on the bluff.' },
+  { src: 'beach-twilight.jpg', alt: 'The beach and surf below the bluff at twilight', tags: ['views'] },
+  { src: 'bluff-benches.jpg', alt: 'Benches set at the bluff edge, looking out over the water', tags: ['views', 'building'] },
+  { src: 'bluff-walk-twilight.jpg', alt: 'The bluff-top walkway at dusk, lit along its length', tags: ['views', 'building'] },
+  { src: 'beach-stairs.jpg', alt: 'The private stairs leading down the bluff to the sand', tags: ['views', 'building'] },
+  { src: 'bluff-lawn.jpg', alt: 'Lawn running to the bluff edge with the ocean beyond', tags: ['views', 'building'] },
+
+  // Community & building
+  { src: 'pool.jpg', alt: 'The community pool', tags: ['building'] },
+  { src: 'spa.jpg', alt: 'The community spa beside the pool deck', tags: ['building'] },
+  { src: 'pool-deck.jpg', alt: 'Loungers and umbrellas on the pool deck', tags: ['building'] },
+  { src: 'pergola-walk.jpg', alt: 'A pergola-covered walkway through the community planting', tags: ['building'] },
+  { src: 'grounds-courtyard.jpg', alt: 'A landscaped courtyard between the buildings', tags: ['building'] },
+  { src: 'building-turret.jpg', alt: 'The cedar-shingled building with its distinctive round turret', tags: ['building'] },
+  { src: 'building-twilight.jpg', alt: 'The building at dusk with its windows lit', tags: ['building'] },
+  { src: 'entry-path.jpg', alt: 'The planted path leading to the residence', tags: ['building'] },
 ];
 
 /* ── Location ─────────────────────────────────────────────────────────────── */

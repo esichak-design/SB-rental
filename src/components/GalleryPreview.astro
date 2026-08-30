@@ -1,4 +1,5 @@
 ---
+import Photo from './Photo.astro';
 import { photos } from '../data/site';
 
 // A hand-picked spread for the teaser; the full set lives on /gallery.
@@ -22,7 +23,7 @@ const featured = photos.slice(0, 5);
     {featured.map((photo, i) => (
       <li class="preview__cell" style={`--i:${i}`}>
         <a class="preview__link frame frame--zoom" href="/gallery" aria-label={`${photo.alt} — open the gallery`}>
-          <img src={photo.src} alt={photo.alt} loading="lazy" decoding="async" />
+          <Photo name={photo.src} alt={photo.alt} sizes="(max-width: 40rem) 80vw, 30vw" />
         </a>
       </li>
     ))}

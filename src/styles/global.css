@@ -29,9 +29,18 @@ body {
   overflow-x: hidden;
 }
 
-img, picture, video, canvas, svg {
+img, video, canvas, svg {
   display: block;
   max-width: 100%;
+}
+
+/* <picture> is a wrapper element with no box of its own to contribute. Letting
+   it generate one breaks every `.frame img { height: 100% }` rule, because the
+   image then sizes against the <picture> rather than the frame. `display:
+   contents` removes the wrapper from layout and leaves the <img> to size
+   against the real parent. */
+picture {
+  display: contents;
 }
 
 input, button, textarea, select { font: inherit; color: inherit; }

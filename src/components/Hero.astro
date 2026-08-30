@@ -1,16 +1,16 @@
 ---
+import Photo from './Photo.astro';
 import { hero, quickFacts } from '../data/site';
 ---
 
 <section class="hero">
   <div class="hero__media">
-    <img
-      src={hero.image}
+    <Photo
+      name={hero.image}
       alt={hero.imageAlt}
-      width="2400"
-      height="1350"
-      fetchpriority="high"
-      decoding="async"
+      sizes="100vw"
+      widths={[768]}
+      priority
     />
     <div class="hero__scrim" aria-hidden="true"></div>
   </div>
@@ -55,7 +55,14 @@ import { hero, quickFacts } from '../data/site';
   }
 
   .hero__media { position: absolute; inset: 0; z-index: -1; }
-  .hero__media img { width: 100%; height: 100%; object-fit: cover; }
+  /* :global is required — the <img> is rendered by the Photo component and so
+     carries that component's scope id, not this one's. A plain `img` selector
+     here is silently scoped to Hero and never matches. */
+  .hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
   /* Two stacked scrims: a broad bottom wash for text contrast, and a light
      top wash so the transparent header stays legible against a bright sky. */
