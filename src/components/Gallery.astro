@@ -1,11 +1,30 @@
 ---
+import { getImage } from 'astro:assets';
 import Photo from './Photo.astro';
 import { photos as sourcePhotos, galleryTags } from '../data/site';
-import { interleaveByGroup } from '../lib/photos';
+import { interleaveByGroup, getPhoto } from '../lib/photos';
 
 // site.ts groups photos by room, which is right for editing but would open the
 // gallery with six near-identical living rooms. Interleave for display.
 const photos = interleaveByGroup(sourcePhotos);
+
+// The lightbox swaps images at runtime, so it needs real built URLs rather than
+// the bare source filenames `photos` carries. Resolve them here, at build time.
+// Width matches the grid's largest variant, so these reuse files the build is
+// already emitting instead of adding another encode per photo.
+const lightboxPhotos = await Promise.all(
+  photos.map(async (photo) => {
+    const asset = getPhoto(photo.src);
+    const rendered = await getImage({ src: asset, format: 'webp', width: asset.width });
+    return {
+      src: rendered.src,
+      width: asset.width,
+      height: asset.height,
+      alt: photo.alt,
+      caption: photo.caption ?? null,
+    };
+  }),
+);
 
 // Only offer a filter for groups that actually contain photos.
 const activeTags = galleryTags.filter((tag) =>
@@ -108,7 +127,7 @@ const activeTags = galleryTags.filter((tag) =>
   </div>
 </div>
 
-<script is:inline define:vars={{ photoData: photos }}>
+<script is:inline define:vars={{ photoData: lightboxPhotos }}>
   window.__galleryPhotos = photoData;
 </script>
 
@@ -322,10 +341,12 @@ const activeTags = galleryTags.filter((tag) =>
 <script>
   // ── Gallery: filtering + lightbox ───────────────────────────────────────────
   interface GalleryPhoto {
+    /** A built asset URL, resolved at build time — not a source filename. */
     src: string;
+    width: number;
+    height: number;
     alt: string;
-    caption?: string;
-    tags?: string[];
+    caption: string | null;
   }
 
   const photos = ((window as any).__galleryPhotos ?? []) as GalleryPhoto[];
@@ -381,6 +402,9 @@ const activeTags = galleryTags.filter((tag) =>
       if (!photo) return;
       img.src = photo.src;
       img.alt = photo.alt;
+      // Intrinsic size keeps the dialog from reflowing as each image arrives.
+      img.width = photo.width;
+      img.height = photo.height;
       caption.textContent = photo.caption ?? photo.alt;
       counter.textContent = `${position + 1} / ${visible.length}`;
 
