@@ -1,9 +1,18 @@
 ---
 import Photo from './Photo.astro';
-import { photos } from '../data/site';
+import { photos, featuredPhotos } from '../data/site';
 
-// A hand-picked spread for the teaser; the full set lives on /gallery.
-const featured = photos.slice(0, 5);
+// Resolve each featured filename against the gallery so the alt text stays in
+// one place. An unknown name fails the build rather than rendering a gap.
+const featured = featuredPhotos.map((name) => {
+  const photo = photos.find((p) => p.src === name);
+  if (!photo) {
+    throw new Error(
+      `featuredPhotos names "${name}", which is not in the photos array in src/data/site.ts.`,
+    );
+  }
+  return photo;
+});
 ---
 
 <section class="preview section" aria-labelledby="preview-title">

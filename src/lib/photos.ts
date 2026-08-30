@@ -53,3 +53,38 @@ export function getPhoto(name: string): ImageMetadata {
 export function isVector(asset: ImageMetadata): boolean {
   return asset.format === 'svg';
 }
+
+/**
+ * Reorder photos so the unfiltered gallery alternates between spaces.
+ *
+ * `photos` in site.ts is grouped by room, which is the right shape for editing
+ * by hand — related shots sit together and it is obvious what is covered. But
+ * rendered in that order the gallery opens with six near-identical views of the
+ * living room before reaching anything else.
+ *
+ * This round-robins across the groups (taking the first photo of each in turn,
+ * then the second of each, and so on) so consecutive tiles show different
+ * spaces. Order within a group is preserved, so the strongest shot of each room
+ * still leads. Filtered views are unaffected — they select by tag, not position.
+ */
+export function interleaveByGroup<T extends { tags?: readonly string[] }>(items: T[]): T[] {
+  const groups = new Map<string, T[]>();
+
+  for (const item of items) {
+    const key = item.tags?.[0] ?? '';
+    const bucket = groups.get(key);
+    if (bucket) bucket.push(item);
+    else groups.set(key, [item]);
+  }
+
+  const buckets = [...groups.values()];
+  const out: T[] = [];
+
+  for (let round = 0; out.length < items.length; round++) {
+    for (const bucket of buckets) {
+      if (round < bucket.length) out.push(bucket[round]);
+    }
+  }
+
+  return out;
+}

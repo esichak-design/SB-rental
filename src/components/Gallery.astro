@@ -1,6 +1,11 @@
 ---
 import Photo from './Photo.astro';
-import { photos, galleryTags } from '../data/site';
+import { photos as sourcePhotos, galleryTags } from '../data/site';
+import { interleaveByGroup } from '../lib/photos';
+
+// site.ts groups photos by room, which is right for editing but would open the
+// gallery with six near-identical living rooms. Interleave for display.
+const photos = interleaveByGroup(sourcePhotos);
 
 // Only offer a filter for groups that actually contain photos.
 const activeTags = galleryTags.filter((tag) =>

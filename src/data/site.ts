@@ -381,6 +381,25 @@ export const photos: Photo[] = [
   { src: 'entry-path.jpg', alt: 'The planted path leading to the residence', tags: ['building'] },
 ];
 
+/**
+ * The teaser strip in the "Have a look around" section on the home page.
+ *
+ * Curated by hand rather than taken off the top of `photos`, because that list
+ * is grouped by room — the first few entries are all the same space, which made
+ * the strip look like one photograph repeated. Pick shots that are obviously
+ * different from each other: the setting, the main rooms, the finish, the
+ * community. Every filename must also appear in `photos` above.
+ */
+export const featuredPhotos: string[] = [
+  'lawn-sunset.jpg',
+  'living-room-ocean.jpg',
+  'kitchen.jpg',
+  'primary-bedroom-day.jpg',
+  'primary-bath.jpg',
+  'bluff-benches.jpg',
+  'pool.jpg',
+];
+
 /* ── Location ─────────────────────────────────────────────────────────────── */
 
 export const location = {
