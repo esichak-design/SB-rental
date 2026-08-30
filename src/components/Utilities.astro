@@ -1,0 +1,93 @@
+---
+import { utilities } from '../data/site';
+
+// A tick reads as "included". The tenant's column is a list of obligations,
+// not perks, so it gets a neutral marker instead.
+const columns = [
+  { ...utilities.ownerProvides, marker: 'tick' as const },
+  { ...utilities.tenantProvides, marker: 'dot' as const },
+];
+---
+
+<section class="utilities section section--sand" aria-labelledby="utilities-title">
+  <div class="container container--wide">
+    <div class="section-head reveal">
+      <p class="eyebrow">{utilities.eyebrow}</p>
+      <h2 class="h2" id="utilities-title">{utilities.headline}</h2>
+    </div>
+
+    <div class="utilities__grid reveal">
+      {columns.map((column) => (
+        <section class="util">
+          <h3 class="util__title">{column.title}</h3>
+          <ul class="util__list">
+            {column.items.map((item) => (
+              <li class="util__item">
+                {column.marker === 'tick' ? (
+                  <svg class="util__tick" width="15" height="15" viewBox="0 0 15 15" fill="none" aria-hidden="true">
+                    <path d="M3 8l3.2 3.2L12 4.6" stroke="currentColor" stroke-width="1.6"
+                          stroke-linecap="round" stroke-linejoin="round"/>
+                  </svg>
+                ) : (
+                  <span class="util__dot" aria-hidden="true"></span>
+                )}
+                <span>{item}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ))}
+
+      <aside class="housekeeping">
+        <h3 class="util__title">Housekeeping</h3>
+        <p class="housekeeping__body">{utilities.housekeeping}</p>
+      </aside>
+    </div>
+  </div>
+</section>
+
+<style>
+  .utilities__grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+    gap: var(--s-7);
+  }
+
+  .util__title {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 24;
+    letter-spacing: var(--ls-snug);
+    padding-bottom: var(--s-4);
+    margin-bottom: var(--s-5);
+    border-bottom: 1px solid var(--c-driftwood);
+  }
+
+  .util__list { display: grid; gap: var(--s-3); }
+
+  .util__item {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-3);
+    align-items: start;
+    font-size: 0.9688rem;
+    color: var(--text-muted);
+  }
+
+  .util__tick { color: var(--c-sea-mid); margin-top: 0.2em; }
+
+  .util__dot {
+    width: 5px;
+    height: 5px;
+    border-radius: 50%;
+    background: var(--c-driftwood);
+    margin-top: 0.62em;
+    margin-inline: 5px;
+  }
+
+  .housekeeping__body {
+    color: var(--text-muted);
+    line-height: var(--lh-loose);
+    text-wrap: pretty;
+  }
+</style>

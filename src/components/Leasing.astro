@@ -1,0 +1,183 @@
+---
+import { leasing, leaseOptions } from '../data/site';
+---
+
+<section class="leasing section" id="leasing" aria-labelledby="leasing-title">
+  <div class="container container--wide">
+    <div class="leasing__head reveal">
+      <div class="leasing__intro">
+        <p class="eyebrow">{leasing.eyebrow}</p>
+        <h2 class="h2" id="leasing-title">{leasing.headline}</h2>
+        <p class="lede leasing__body">{leasing.body}</p>
+      </div>
+
+      <div class="rate">
+        <p class="rate__label">Monthly</p>
+        <p class="rate__amount">{leasing.rateRange}</p>
+        <p class="rate__unit">{leasing.rateUnit}</p>
+        <p class="rate__note">{leasing.rateNote}</p>
+      </div>
+    </div>
+
+    <ul class="options reveal reveal--stagger">
+      {leaseOptions.map((option, i) => (
+        <li class="option" style={`--i:${i}`}>
+          <p class="option__summary">{option.summary}</p>
+          <h3 class="option__name">{option.name}</h3>
+          <p class="option__detail">{option.detail}</p>
+          {option.note && <p class="option__note">{option.note}</p>}
+        </li>
+      ))}
+    </ul>
+
+    <ul class="terms reveal">
+      {leasing.terms.map((term) => (
+        <li class="term">
+          <span class="term__dot" aria-hidden="true"></span>
+          <span>{term}</span>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  /* ── Head: copy on the left, the headline number on the right ───────────── */
+  .leasing__head {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: clamp(var(--s-6), 5vw, var(--s-9));
+    align-items: start;
+    margin-bottom: var(--s-9);
+  }
+
+  .leasing__body { margin-top: var(--s-5); }
+
+  .rate {
+    padding: var(--s-6) var(--s-7);
+    background: var(--c-sea-wash);
+    border-radius: var(--r-lg);
+    text-align: right;
+    min-width: 16rem;
+  }
+
+  .rate__label {
+    font-size: var(--t-xs);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: var(--c-sea);
+    font-weight: 600;
+  }
+
+  .rate__amount {
+    margin-top: var(--s-3);
+    font-family: var(--font-display);
+    font-size: var(--t-2xl);
+    font-variation-settings: 'SOFT' 24, 'WONK' 0, 'opsz' 48;
+    line-height: 1.05;
+    letter-spacing: var(--ls-tight);
+    white-space: nowrap;
+  }
+
+  .rate__unit { font-size: var(--t-sm); color: var(--text-muted); margin-top: var(--s-1); }
+
+  .rate__note {
+    margin-top: var(--s-4);
+    padding-top: var(--s-4);
+    border-top: 1px solid rgba(31, 78, 92, 0.16);
+    font-size: var(--t-sm);
+    line-height: var(--lh-normal);
+    color: var(--text-muted);
+    max-width: 15rem;
+    margin-left: auto;
+    text-wrap: pretty;   /* keeps the last word off a line of its own */
+  }
+
+  /* ── The three furnishing options ───────────────────────────────────────── */
+  .options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: var(--s-4);
+  }
+
+  .option {
+    display: flex;
+    flex-direction: column;
+    padding: var(--s-7);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r-lg);
+    transition: border-color var(--d-base) var(--ease), box-shadow var(--d-base) var(--ease),
+                transform var(--d-base) var(--ease);
+  }
+  .option:hover {
+    border-color: var(--c-sea-soft);
+    box-shadow: var(--sh-md);
+    transform: translateY(-2px);
+  }
+
+  .option__summary {
+    font-size: var(--t-xs);
+    letter-spacing: var(--ls-caps);
+    text-transform: uppercase;
+    color: var(--c-sea);
+    font-weight: 600;
+  }
+
+  .option__name {
+    margin-top: var(--s-3);
+    font-family: var(--font-display);
+    font-size: var(--t-xl);
+    font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 32;
+    letter-spacing: var(--ls-snug);
+  }
+
+  .option__detail {
+    margin-top: var(--s-4);
+    color: var(--text-muted);
+    line-height: var(--lh-loose);
+    text-wrap: pretty;
+    flex: 1;
+  }
+
+  .option__note {
+    margin-top: var(--s-5);
+    padding-top: var(--s-4);
+    border-top: 1px dashed var(--line);
+    font-size: var(--t-sm);
+    color: var(--c-sun);
+    font-weight: 500;
+  }
+
+  /* ── Terms ──────────────────────────────────────────────────────────────── */
+  .terms {
+    margin-top: var(--s-7);
+    display: grid;
+    gap: var(--s-4);
+    padding: var(--s-6) var(--s-7);
+    background: var(--bg-alt);
+    border-radius: var(--r-lg);
+  }
+
+  .term {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    gap: var(--s-3);
+    align-items: baseline;
+    font-size: 0.9688rem;
+    line-height: var(--lh-normal);
+    color: var(--text-muted);
+  }
+  .term__dot {
+    width: 5px; height: 5px;
+    border-radius: 50%;
+    background: var(--c-sea-mid);
+    translate: 0 -2px;
+  }
+
+  @media (max-width: 56rem) {
+    .leasing__head { grid-template-columns: 1fr; }
+    .rate { text-align: left; }
+    .rate__note { margin-left: 0; }
+  }
+</style>

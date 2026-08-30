@@ -1,7 +1,8 @@
-# Sandpiper Bay — beach condo site
+# 325 Sierra — Solana Beach oceanfront residence
 
-A fast, static marketing site for our beach condo: photo gallery, amenities,
-location, rates, and a booking-inquiry form that emails us directly.
+Marketing site for a two-bedroom oceanfront residence at 325 S Sierra Ave
+(Seascape Shores), Solana Beach, CA — available furnished, semi-furnished, or
+unfurnished on flexible lease terms.
 
 Built with [Astro](https://astro.build). No server, no database, no monthly
 fees — it builds to plain HTML/CSS and deploys anywhere.
@@ -24,16 +25,19 @@ npm run dev        # http://localhost:4321
 
 **Almost everything lives in one file: [`src/data/site.ts`](src/data/site.ts).**
 
-Copy, rates, amenities, room descriptions, nearby distances, reviews, contact
-details, and the photo list are all there. Change a value, save, done — you
-should not need to open a component to change wording or numbers.
+Copy, lease rates, features, room descriptions, what's nearby, utilities, and
+the photo list are all there. Change a value, save, done — you should not need
+to open a component to change wording or numbers.
 
-Anything still marked `TODO:` in that file is a placeholder waiting on you.
+Anything still marked `TODO:` in that file is waiting on you.
 
 ### Before going live
 
-1. **`src/data/site.ts`** — replace every `TODO:` (condo name, location, email,
-   phone, rates, distances, policies, reviews).
+1. **`src/data/site.ts`** — work through every `TODO:`. The important ones:
+   - `site.name` — currently `325 Sierra`; `Seascape Shores` is the alternative
+   - `contact.email` — where inquiries should land
+   - `leasing.rateRange` — confirm the monthly range
+   - `location.nearby` — add real drive times where they're missing
 2. **`astro.config.mjs`** — set `site` to your real domain.
 3. **`public/robots.txt`** — update the `Sitemap:` host to match.
 4. **Photos** — see below.
@@ -42,22 +46,22 @@ Anything still marked `TODO:` in that file is a placeholder waiting on you.
 ## Photos
 
 The site ships with generated SVG placeholders so it looks complete before the
-real photography lands. Each one is labelled with the room it stands in for.
+real photography lands. Each is labelled with the room it stands in for.
 
 To use real photos:
 
 1. Drop the files into `public/images/` (JPG or WebP, roughly **2000px on the
-   long edge** — sharp enough to look good, small enough to load fast).
+   long edge**).
 2. Point the matching `src` in `src/data/site.ts` at them, e.g.
    `/images/living-room.jpg`.
 3. Write a real `alt` for each. It is what screen-reader users hear and what
    search engines read.
 4. Delete the `.svg` placeholder it replaced.
 
-Mark tall photos with `orientation: 'portrait'` and they get a taller cell in
-the gallery grid. The `tags` control which gallery filter a photo appears under.
+Mark tall photos `orientation: 'portrait'` for a taller gallery cell. The `tags`
+control which gallery filter a photo appears under.
 
-To regenerate the placeholders after editing the list:
+Regenerate placeholders after editing the list:
 
 ```bash
 node scripts/generate-placeholders.mjs
@@ -66,24 +70,25 @@ node scripts/generate-placeholders.mjs
 ## The inquiry form
 
 Out of the box the form works with **no configuration**: on submit it opens the
-guest's email app with their name, dates, party size, and message already filled
-in, addressed to `contact.email`. Nothing is a dead end.
+visitor's email app with their name, move-in date, length of stay, furnishing
+preference, and message already filled in. Nothing is a dead end.
 
-To have inquiries arrive as normal emails instead, pick one and fill it in under
+To have inquiries arrive as normal emails instead, set one of these under
 `inquiryForm` in `src/data/site.ts`:
 
-- **[Formspree](https://formspree.io)** — create a form, paste the endpoint:
-  ```ts
-  endpoint: 'https://formspree.io/f/xxxxxxxx',
-  ```
-- **[Web3Forms](https://web3forms.com)** — free, paste your access key:
-  ```ts
-  accessKey: 'your-access-key',
-  ```
+- **[Formspree](https://formspree.io)** — `endpoint: 'https://formspree.io/f/xxxxxxxx'`
+- **[Web3Forms](https://web3forms.com)** — `accessKey: 'your-access-key'`
 
-Both have free tiers that comfortably cover a single rental. The form validates
-before sending, traps bots with a honeypot, and falls back to a direct email
-address if the request ever fails.
+Both have free tiers that comfortably cover a single listing. The form validates
+before sending, traps bots with a honeypot, and shows a direct email address if
+a request ever fails.
+
+## A note on reviews
+
+`reviews` in `site.ts` is **intentionally empty**, and the section renders
+nothing while it is. Only add real quotes from real tenants — invented
+testimonials on a live listing misrepresent the property to people making a
+significant financial decision.
 
 ## Deploying
 
@@ -113,9 +118,12 @@ public/
 └── fonts/                ← Fraunces + Inter, self-hosted
 ```
 
+Page order: hero → the residence → gallery preview → room by room → features →
+who it suits → leasing → utilities & care → location → inquiry.
+
 **Design system.** Every colour, size, and timing is a CSS custom property in
 `tokens.css`. Components reference the variables and never hard-code a value, so
-retheming the site means editing one file.
+retheming means editing one file.
 
 **Typography.** Fraunces (display) and Inter (text), both variable fonts served
 from `/fonts` rather than a CDN — one less third-party connection, and nothing
@@ -124,13 +132,13 @@ about visitors leaves the domain. Licences are in `public/fonts/`.
 **Accessibility.** Audited with axe-core: zero violations across all pages,
 including the open lightbox, the mobile menu, and the form's error state. All
 text meets WCAG AA contrast. Keyboard navigation, focus management, and
-`prefers-reduced-motion` are all handled.
+`prefers-reduced-motion` are handled.
 
 **Progressive enhancement.** With JavaScript off you still get every section and
-every photo, fully readable. If you have configured a form endpoint, the form
-posts to it natively; if you have not, it shows your email address instead of a
-button that could not work. JavaScript adds the scroll reveals, the lightbox,
-the gallery filters, and inline form validation.
+every photo, fully readable. If a form endpoint is configured the form posts to
+it natively; if not, it shows your email address rather than a button that could
+not work. JavaScript adds the scroll reveals, the lightbox, the gallery filters,
+and inline form validation.
 
 ## Branches
 

@@ -19,18 +19,18 @@ mkdirSync(OUT, { recursive: true });
 
 /** [top, bottom, accent] — sampled to feel like the room they stand in for. */
 const SCENES = {
-  'hero':            { w: 2400, h: 1350, sky: ['#f6c99a', '#e8956a', '#b45f52'], sea: ['#2b5d6b', '#173f4c'], horizon: 0.62, sun: true,  label: 'Hero — sunset from the balcony' },
-  'living-room':     { w: 2000, h: 1500, room: ['#f6f1e8', '#e2d8c8'], accent: '#c9b9a3', label: 'Living room' },
+  'hero':            { w: 2400, h: 1350, sky: ['#f7cda2', '#e89468', '#a85a55'], sea: ['#2a5a6b', '#163b4a'], horizon: 0.62, sun: true,  label: 'Hero — sunset over the Pacific' },
+  'living-room':     { w: 2000, h: 1500, room: ['#f6f1e8', '#e2d8c8'], accent: '#c9b9a3', label: 'Living & dining' },
   'kitchen':         { w: 2000, h: 1500, room: ['#f8f5ef', '#dcd5c8'], accent: '#b9ae9b', label: 'Kitchen' },
   'dining':          { w: 2000, h: 1500, room: ['#f5efe4', '#ded2be'], accent: '#c2ad90', label: 'Dining' },
-  'primary-bedroom': { w: 2000, h: 1500, room: ['#f3f0ea', '#d9d5cc'], accent: '#b4b0a5', label: 'Primary bedroom' },
-  'second-bedroom':  { w: 1500, h: 2000, room: ['#f4f1e9', '#d7d2c6'], accent: '#b7b1a2', label: 'Second bedroom' },
+  'primary-bedroom': { w: 2000, h: 1500, room: ['#f3f0ea', '#d9d5cc'], accent: '#b4b0a5', label: 'Primary suite' },
+  'second-bedroom':  { w: 1500, h: 2000, room: ['#f4f1e9', '#d7d2c6'], accent: '#b7b1a2', label: 'Second suite' },
   'primary-bath':    { w: 1500, h: 2000, room: ['#f4f6f5', '#d3dcda'], accent: '#a8b8b5', label: 'Primary bath' },
   'second-bath':     { w: 2000, h: 1500, room: ['#f5f7f6', '#d6dedc'], accent: '#adbcb9', label: 'Second bath' },
-  'balcony':         { w: 2000, h: 1500, sky: ['#cfe4ea', '#9dc4cf', '#7aa9b6'], sea: ['#356d7a', '#1e4b57'], horizon: 0.58, label: 'Balcony' },
-  'pool':            { w: 2000, h: 1500, room: ['#dcecef', '#8dbcc6'], accent: '#5e97a4', label: 'Pool deck' },
+  'views':           { w: 2000, h: 1500, sky: ['#cfe2ea', '#9dc0cf', '#7aa5b6'], sea: ['#2f6879', '#1a4553'], horizon: 0.5,  label: 'Ocean views' },
+  'terrace':         { w: 2000, h: 1500, sky: ['#d8e8ee', '#a6c8d4', '#84aebc'], sea: ['#356d7a', '#1e4b57'], horizon: 0.58, label: 'Outdoor space' },
+  'pool':            { w: 2000, h: 1500, room: ['#dcecef', '#8dbcc6'], accent: '#5e97a4', label: 'Community pool' },
   'beach':           { w: 1500, h: 2000, sky: ['#dceaef', '#a8cbd5', '#e8dcc4'], sea: ['#4a8896', '#e3d6bd'], horizon: 0.45, label: 'Beach' },
-  'building':        { w: 2000, h: 1500, sky: ['#d5e7ee', '#a9cad6', '#f0e6d4'], sea: ['#cfc3ae', '#b9ab94'], horizon: 0.7, label: 'Building' },
 };
 
 const esc = (s) => s.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');

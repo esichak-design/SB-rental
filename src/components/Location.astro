@@ -45,7 +45,7 @@ import { location } from '../data/site';
               <span class="nearby__name">{place.name}</span>
               <span class="nearby__detail">{place.detail}</span>
             </div>
-            <span class="nearby__distance">{place.distance}</span>
+            {place.distance && <span class="nearby__distance">{place.distance}</span>}
           </li>
         ))}
       </ul>

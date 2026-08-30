@@ -1,0 +1,50 @@
+---
+import { suitedFor } from '../data/site';
+---
+
+<section class="suited section" aria-labelledby="suited-title">
+  <div class="container container--wide">
+    <div class="section-head reveal">
+      <p class="eyebrow">{suitedFor.eyebrow}</p>
+      <h2 class="h2" id="suited-title">{suitedFor.headline}</h2>
+      <p class="lede">{suitedFor.body}</p>
+    </div>
+
+    <ul class="cases reveal reveal--stagger">
+      {suitedFor.cases.map((item, i) => (
+        <li class="case" style={`--i:${i}`}>
+          <h3 class="case__title">{item.title}</h3>
+          <p class="case__detail">{item.detail}</p>
+        </li>
+      ))}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .cases {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: var(--s-5);
+  }
+
+  .case {
+    padding-top: var(--s-5);
+    border-top: 2px solid var(--c-sea-mid);
+  }
+
+  .case__title {
+    font-family: var(--font-display);
+    font-size: var(--t-lg);
+    font-variation-settings: 'SOFT' 20, 'WONK' 0, 'opsz' 24;
+    letter-spacing: var(--ls-snug);
+  }
+
+  .case__detail {
+    margin-top: var(--s-3);
+    font-size: 0.9688rem;
+    line-height: var(--lh-loose);
+    color: var(--text-muted);
+    text-wrap: pretty;
+  }
+</style>
