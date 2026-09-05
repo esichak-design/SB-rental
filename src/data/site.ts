@@ -68,8 +68,8 @@ export const site = {
 /* ── Contact ──────────────────────────────────────────────────────────────── */
 
 export const contact = {
-  /** TODO: the address inquiries should reach. */
-  email: 'hello@example.com',
+  /** Where inquiries land. */
+  email: 'esichak@gmail.com',
   /** TODO: or set to null to hide the phone number entirely. */
   phone: null as string | null,
   /** Used for tel: links — digits only. */

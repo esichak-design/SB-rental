@@ -36,19 +36,17 @@ Anything still marked `TODO:` in that file is waiting on you.
 The domain, hosting and build are done. What remains is content only — all of
 it in [`src/data/site.ts`](src/data/site.ts), and none of it needs a developer:
 
-1. **`contact.email`** — still `hello@example.com`. Until this is real, the
-   inquiry form emails a placeholder. This is the one that actually loses
-   business, so do it first.
-2. **`inquiryForm.endpoint`** — unset, so the form falls back to opening the
-   visitor's mail app with their details pre-filled. Works, but nothing is
-   recorded anywhere. See "The inquiry form" below.
-3. **`leasing.rateRange`** — confirm `$10,500 – $15,500` is still current.
-4. **`location.nearby`** — several entries have no drive time. Distances render
+1. **`inquiryForm.endpoint`** — unset, so the form falls back to opening the
+   visitor's mail app with their details pre-filled. It works and reaches the
+   right inbox, but nothing is recorded anywhere and a visitor without a
+   configured mail client gets nothing. See "The inquiry form" below.
+2. **`leasing.rateRange`** — confirm `$10,500 – $15,500` is still current.
+3. **`location.nearby`** — several entries have no drive time. Distances render
    only when set, so they are simply absent rather than wrong; fill them in as
    they are confirmed.
-5. **`site.name`** — `325 Sierra`. `Seascape Shores` is the community's name and
+4. **`site.name`** — `325 Sierra`. `Seascape Shores` is the community's name and
    the obvious alternative.
-6. **Verify the copy.** Details about the in-residence laundry, the desk nook,
+5. **Verify the copy.** Details about the in-residence laundry, the desk nook,
    and the community spa were read off the photographs rather than supplied by
    the owner. They look right, but a prospective tenant will hold the page to
    them, so confirm before relying on them.
