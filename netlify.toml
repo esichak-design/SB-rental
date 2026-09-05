@@ -1,0 +1,52 @@
+# Netlify build configuration
+# ─────────────────────────────────────────────────────────────────────────────
+# Keeping this in the repo means the build is reproducible and reviewable,
+# rather than living in dashboard settings only one person can see. Netlify
+# reads it automatically; nothing needs configuring in the UI.
+
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Pin the runtime. Netlify's default floats, and a major-version bump landing
+  # mid-deploy is a bad way to find out about an incompatibility.
+  NODE_VERSION = "22"
+
+# ── Caching ──────────────────────────────────────────────────────────────────
+# Astro fingerprints everything under /_astro (the filename contains a content
+# hash), so a changed file always arrives under a new name. Nothing there can
+# go stale, which makes it safe to cache permanently.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000, immutable"
+
+# Fonts are served from /public, so they are *not* fingerprinted — the filename
+# stays the same if the file is replaced. Cached long, but deliberately without
+# `immutable`, so a browser will still revalidate rather than pinning a stale
+# face forever.
+[[headers]]
+  for = "/fonts/*"
+  [headers.values]
+    cache-control = "public, max-age=31536000"
+
+# Photographs are fingerprinted by the build too, but the originals in /public
+# (favicon, robots) are not — short cache so a change goes live promptly.
+[[headers]]
+  for = "/*.svg"
+  [headers.values]
+    cache-control = "public, max-age=86400"
+
+# ── Headers ──────────────────────────────────────────────────────────────────
+# Deliberately no Content-Security-Policy. The site is entirely self-contained
+# today, so one would be easy to write — but `location.mapEmbedUrl` in
+# src/data/site.ts is a documented next step, and a strict policy would block
+# that iframe with a failure that is genuinely hard to diagnose. Worth adding
+# once the map is either in or ruled out.
+[[headers]]
+  for = "/*"
+  [headers.values]
+    x-content-type-options = "nosniff"
+    referrer-policy = "strict-origin-when-cross-origin"
+    x-frame-options = "SAMEORIGIN"
