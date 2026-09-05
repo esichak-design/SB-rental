@@ -16,14 +16,16 @@ import { hero, quickFacts } from '../data/site';
   </div>
 
   <div class="hero__body container container--wide">
-    <p class="hero__eyebrow">{hero.eyebrow}</p>
-    <h1 class="display hero__headline">{hero.headline}</h1>
-    <p class="hero__subhead">{hero.subhead}</p>
-    <div class="hero__actions">
-      <a class="btn btn--lg" href={hero.cta.href}>{hero.cta.label}</a>
-      <a class="btn btn--lg btn--onDark" href={hero.secondaryCta.href}>
-        {hero.secondaryCta.label}
-      </a>
+    <div class="hero__panel">
+      <p class="hero__eyebrow">{hero.eyebrow}</p>
+      <h1 class="display hero__headline">{hero.headline}</h1>
+      <p class="hero__subhead">{hero.subhead}</p>
+      <div class="hero__actions">
+        <a class="btn btn--lg" href={hero.cta.href}>{hero.cta.label}</a>
+        <a class="btn btn--lg btn--onDark" href={hero.secondaryCta.href}>
+          {hero.secondaryCta.label}
+        </a>
+      </div>
     </div>
   </div>
 
@@ -70,11 +72,38 @@ import { hero, quickFacts } from '../data/site';
     position: absolute;
     inset: 0;
     background:
-      linear-gradient(to top, rgba(11, 20, 27, 0.78) 0%, rgba(11, 20, 27, 0.34) 38%, rgba(11, 20, 27, 0) 68%),
-      linear-gradient(to bottom, rgba(11, 20, 27, 0.42) 0%, rgba(11, 20, 27, 0) 22%);
+      /* Bottom wash, so the panel edge does not read as a hard cut-out. */
+      linear-gradient(to top, rgba(8, 15, 20, 0.55) 0%, rgba(8, 15, 20, 0.18) 45%, rgba(8, 15, 20, 0) 75%),
+      /* Top wash: the header sits directly on the photograph, and this hero's
+         sky is bright enough to swallow white text without it. */
+      linear-gradient(to bottom, rgba(8, 15, 20, 0.58) 0%, rgba(8, 15, 20, 0.28) 9%, rgba(8, 15, 20, 0) 20%);
   }
 
   .hero__body { color: #fff; }
+
+  /* A scrim alone cannot carry this hero. Measured against the rendered pixels,
+     even a heavy gradient left the headline at 2.0:1 on desktop and 1.1:1 on
+     mobile, because the sunset sky is brightest exactly where the type sits —
+     and darkening it far enough to fix that muddies the photograph. The panel
+     puts a known ground under the text instead, and keeps the image readable
+     around and through it. */
+  .hero__panel {
+    max-width: 46rem;
+    padding: clamp(1.75rem, 3.5vw, 2.75rem) clamp(1.5rem, 3.5vw, 3rem) clamp(2rem, 3.5vw, 3rem);
+    border-radius: var(--r-xl);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    /* Without backdrop-filter there is no blur to help, so the tint does more
+       of the work. */
+    background: rgba(8, 15, 20, 0.72);
+  }
+
+  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+    .hero__panel {
+      background: rgba(8, 15, 20, 0.55);
+      backdrop-filter: blur(22px) saturate(1.25);
+      -webkit-backdrop-filter: blur(22px) saturate(1.25);
+    }
+  }
 
   .hero__eyebrow {
     font-size: var(--t-xs);
@@ -89,7 +118,6 @@ import { hero, quickFacts } from '../data/site';
   .hero__headline {
     color: #fff;
     max-width: 16ch;
-    text-shadow: 0 2px 40px rgba(11, 20, 27, 0.35);
     animation: heroIn var(--d-slow) var(--ease-out) 90ms both;
   }
 

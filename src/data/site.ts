@@ -121,7 +121,14 @@ export const hero = {
   headline: 'Perched above the Pacific',
   subhead:
     'A renovated two-bedroom oceanfront residence on the Solana Beach bluffs. Wake to panoramic ocean views, watch the surfers with your morning coffee, and take the sunsets from home.',
-  /** TODO: your best wide, bright ocean-view photo. Bare filename. */
+  /**
+   * TODO: your best wide, bright ocean-view photo. Bare filename.
+   *
+   * If you change this, check the headline is still readable over it. The copy
+   * sits in a translucent panel precisely because this photograph is too bright
+   * behind the text for a plain gradient to carry — a darker image would allow
+   * a lighter treatment, a brighter one may need a heavier panel.
+   */
   image: 'primary-bedroom-twilight.jpg',
   imageAlt: 'The primary bedroom at dusk, its gable window filled with a sunset over the Pacific',
   cta: { label: 'Inquire about leasing', href: '#inquire' },
