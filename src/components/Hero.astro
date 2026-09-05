@@ -3,30 +3,43 @@ import Photo from './Photo.astro';
 import { hero, quickFacts } from '../data/site';
 ---
 
-<section class="hero">
-  <div class="hero__media">
-    <Photo
-      name={hero.image}
-      alt={hero.imageAlt}
-      sizes="100vw"
-      widths={[768]}
-      priority
-    />
-    <div class="hero__scrim" aria-hidden="true"></div>
-  </div>
+{/*
+  Split hero: the copy sits on its own solid panel and the photograph keeps a
+  clear half of the screen to itself.
 
-  <div class="hero__body container container--wide">
-    <div class="hero__panel">
+  The earlier full-bleed treatment could not do both. Measured against the
+  rendered pixels, white text over this photograph ran at 1.1–2.0:1, and no
+  gradient fixes it — the sunset sky is brightest exactly where the headline
+  sits. A translucent panel solved the contrast but covered the sunset, which
+  is the whole point of the image. Splitting them means neither has to
+  compromise: the text is on a known ground, and the sky is unobstructed.
+*/}
+<section class="hero">
+  <div class="hero__panel">
+    <div class="hero__content">
       <p class="hero__eyebrow">{hero.eyebrow}</p>
-      <h1 class="display hero__headline">{hero.headline}</h1>
+      <h1 class="hero__headline">{hero.headline}</h1>
       <p class="hero__subhead">{hero.subhead}</p>
       <div class="hero__actions">
         <a class="btn btn--lg" href={hero.cta.href}>{hero.cta.label}</a>
-        <a class="btn btn--lg btn--onDark" href={hero.secondaryCta.href}>
+        <a class="btn btn--lg btn--onPanel" href={hero.secondaryCta.href}>
           {hero.secondaryCta.label}
         </a>
       </div>
     </div>
+  </div>
+
+  <div class="hero__media">
+    <Photo
+      name={hero.image}
+      alt={hero.imageAlt}
+      sizes="(max-width: 60rem) 100vw, 56vw"
+      widths={[640, 900]}
+      priority
+    />
+    {/* Only a top wash, and only over the photograph: the fixed header crosses
+        this half, and the ceiling behind it is bright. The rest is left clear. */}
+    <div class="hero__wash" aria-hidden="true"></div>
   </div>
 
   <a class="hero__scroll" href="#the-residence" aria-label="Scroll to the residence details">
@@ -47,62 +60,33 @@ import { hero, quickFacts } from '../data/site';
 
 <style>
   .hero {
-    position: relative;
-    min-height: min(100svh, 62rem);
-    display: flex;
-    align-items: flex-end;
-    padding-block: var(--s-12) var(--s-10);
+    display: grid;
+    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
+    min-height: min(100svh, 60rem);
     isolation: isolate;
-    overflow: hidden;
   }
 
-  .hero__media { position: absolute; inset: 0; z-index: -1; }
-  /* :global is required — the <img> is rendered by the Photo component and so
-     carries that component's scope id, not this one's. A plain `img` selector
-     here is silently scoped to Hero and never matches. */
-  .hero__media :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  /* Two stacked scrims: a broad bottom wash for text contrast, and a light
-     top wash so the transparent header stays legible against a bright sky. */
-  .hero__scrim {
-    position: absolute;
-    inset: 0;
-    background:
-      /* Bottom wash, so the panel edge does not read as a hard cut-out. */
-      linear-gradient(to top, rgba(8, 15, 20, 0.55) 0%, rgba(8, 15, 20, 0.18) 45%, rgba(8, 15, 20, 0) 75%),
-      /* Top wash: the header sits directly on the photograph, and this hero's
-         sky is bright enough to swallow white text without it. */
-      linear-gradient(to bottom, rgba(8, 15, 20, 0.58) 0%, rgba(8, 15, 20, 0.28) 9%, rgba(8, 15, 20, 0) 20%);
-  }
-
-  .hero__body { color: #fff; }
-
-  /* A scrim alone cannot carry this hero. Measured against the rendered pixels,
-     even a heavy gradient left the headline at 2.0:1 on desktop and 1.1:1 on
-     mobile, because the sunset sky is brightest exactly where the type sits —
-     and darkening it far enough to fix that muddies the photograph. The panel
-     puts a known ground under the text instead, and keeps the image readable
-     around and through it. */
+  /* ── Copy panel ─────────────────────────────────────────────────────────── */
   .hero__panel {
-    max-width: 46rem;
-    padding: clamp(1.75rem, 3.5vw, 2.75rem) clamp(1.5rem, 3.5vw, 3rem) clamp(2rem, 3.5vw, 3rem);
-    border-radius: var(--r-xl);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    /* Without backdrop-filter there is no blur to help, so the tint does more
-       of the work. */
-    background: rgba(8, 15, 20, 0.72);
+    /* Line the copy up with the wordmark above it. That inset is where the
+       page container's content starts, so it is reproduced here rather than
+       guessed at — otherwise the hero text sits ~70px left of the wordmark at
+       wide viewports and the left edge reads as broken. */
+    --panel-inset: max(var(--gutter), calc((100vw - var(--w-wide)) / 2 + var(--gutter)));
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    background: #0f1a22;
+    color: #fff;
+    padding: calc(var(--header-h) + var(--s-7)) clamp(1.5rem, 3vw, 3.5rem) var(--s-9)
+      var(--panel-inset);
   }
 
-  @supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
-    .hero__panel {
-      background: rgba(8, 15, 20, 0.55);
-      backdrop-filter: blur(22px) saturate(1.25);
-      -webkit-backdrop-filter: blur(22px) saturate(1.25);
-    }
+  .hero__content {
+    width: 100%;
+    max-width: 34rem;
   }
 
   .hero__eyebrow {
@@ -110,23 +94,29 @@ import { hero, quickFacts } from '../data/site';
     font-weight: 600;
     letter-spacing: var(--ls-caps);
     text-transform: uppercase;
-    color: rgba(255, 255, 255, 0.85);
+    color: var(--c-sea-soft);
     margin-bottom: var(--s-5);
     animation: heroIn var(--d-slow) var(--ease-out) both;
   }
 
   .hero__headline {
-    color: #fff;
-    max-width: 16ch;
+    font-family: var(--font-display);
+    font-weight: 400;
+    /* Smaller than the old full-bleed display size: the panel is a column, not
+       the whole viewport, and the line needs room to breathe in it. */
+    font-size: clamp(2.75rem, 4.6vw, 5.25rem);
+    line-height: 1.02;
+    letter-spacing: var(--ls-tight);
+    font-variation-settings: 'SOFT' 30, 'WONK' 1, 'opsz' 120;
+    text-wrap: balance;
     animation: heroIn var(--d-slow) var(--ease-out) 90ms both;
   }
 
   .hero__subhead {
     margin-top: var(--s-5);
-    max-width: 44ch;
     font-size: var(--t-lg);
     line-height: var(--lh-loose);
-    color: rgba(255, 255, 255, 0.9);
+    color: rgba(255, 255, 255, 0.82);
     text-wrap: pretty;
     animation: heroIn var(--d-slow) var(--ease-out) 180ms both;
   }
@@ -139,15 +129,55 @@ import { hero, quickFacts } from '../data/site';
     animation: heroIn var(--d-slow) var(--ease-out) 270ms both;
   }
 
+  /* Outline button, sitting on the panel rather than on photography. */
+  .btn--onPanel {
+    --btn-bg: transparent;
+    --btn-fg: #fff;
+    --btn-bd: rgba(255, 255, 255, 0.42);
+  }
+  .btn--onPanel:hover { --btn-bg: #fff; --btn-fg: #0f1a22; --btn-bd: #fff; }
+
   @keyframes heroIn {
     from { opacity: 0; transform: translateY(1.5rem); }
     to   { opacity: 1; transform: none; }
   }
 
+  /* ── Photograph ─────────────────────────────────────────────────────────── */
+  .hero__media {
+    position: relative;
+    overflow: hidden;
+    background: var(--c-shell);
+  }
+
+  .hero__media :global(img) {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    /* Bias the crop up and slightly left so the gable window — and the sunset
+       through it — stays in frame as the column narrows. */
+    object-position: 42% 38%;
+  }
+
+  /* Sized against the header rather than as a percentage of the image, so it
+     covers the same band whatever height the photograph is given. */
+  .hero__wash {
+    position: absolute;
+    inset: 0 0 auto 0;
+    height: calc(var(--header-h) + 4rem);
+    background: linear-gradient(
+      to bottom,
+      rgba(8, 15, 20, 0.72) 0%,
+      rgba(8, 15, 20, 0.64) 52%,
+      rgba(8, 15, 20, 0.28) 80%,
+      rgba(8, 15, 20, 0) 100%
+    );
+    pointer-events: none;
+  }
+
   /* ── Scroll cue ─────────────────────────────────────────────────────────── */
   .hero__scroll {
     position: absolute;
-    left: 50%;
+    left: 22.5%;
     bottom: var(--s-5);
     translate: -50% 0;
     width: 2.5rem;
@@ -158,7 +188,7 @@ import { hero, quickFacts } from '../data/site';
   .hero__scroll-line {
     width: 1px;
     height: 2.5rem;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 100%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 100%);
     transform-origin: top;
     animation: drop 2.4s var(--ease) infinite;
   }
@@ -169,6 +199,31 @@ import { hero, quickFacts } from '../data/site';
     100%      { transform: scaleY(1) translateY(100%); opacity: 0; }
   }
 
+  /* ── Stacked: photograph above, copy below ──────────────────────────────── */
+  @media (max-width: 60rem) {
+    .hero {
+      grid-template-columns: 1fr;
+      grid-template-rows: auto auto;
+      min-height: 0;
+    }
+    /* Photograph first, so the sunset is what you land on. */
+    .hero__media { grid-row: 1; height: clamp(20rem, 52svh, 32rem); }
+    .hero__media :global(img) { object-position: 45% 40%; }
+
+    .hero__panel {
+      grid-row: 2;
+      align-items: stretch;
+      --panel-inset: var(--gutter);
+      padding: clamp(2.25rem, 7vw, 3.5rem) var(--gutter) clamp(2.75rem, 8vw, 4rem);
+    }
+    .hero__content { max-width: none; margin-right: 0; }
+    .hero__scroll { display: none; }
+  }
+
+  @media (max-width: 34rem) {
+    .hero__actions .btn { flex: 1 1 auto; }
+  }
+
   /* ── Quick facts ────────────────────────────────────────────────────────── */
   .facts {
     background: var(--c-ink);
@@ -176,10 +231,7 @@ import { hero, quickFacts } from '../data/site';
     padding-block: var(--s-6);
   }
 
-  .facts__list {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-  }
+  .facts__list { display: grid; grid-template-columns: repeat(4, 1fr); }
 
   .facts__item {
     display: grid;
@@ -206,14 +258,12 @@ import { hero, quickFacts } from '../data/site';
   }
 
   @media (max-width: 40rem) {
-    .hero { min-height: 92svh; }
-    .hero__actions .btn { flex: 1 1 auto; }
     .facts__list { grid-template-columns: repeat(2, 1fr); row-gap: var(--s-5); }
     .facts__item:nth-child(odd) { border-left: 0; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__scroll-line { animation: none; opacity: 0.85; }
+    .hero__scroll-line { animation: none; opacity: 0.8; }
     :is(.hero__eyebrow, .hero__headline, .hero__subhead, .hero__actions) { animation: none; }
   }
 </style>
