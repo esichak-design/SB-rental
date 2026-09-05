@@ -40,10 +40,14 @@ const endpoint = inquiryForm.accessKey
         )}
         <input type="hidden" name="_subject" value="New leasing inquiry from the website" />
 
-        {/* Honeypot — bots fill it, people never see it. */}
+        {/* Honeypot — bots fill it, people never see it. Named `_gotcha`, which
+            is Formspree's own convention: it discards those submissions server
+            side and keeps the field out of the notification email. The
+            client-side check below still runs, so this works the same with no
+            endpoint configured at all. */}
         <div class="form__trap" aria-hidden="true">
           <label for="company">Company</label>
-          <input type="text" id="company" name="company" tabindex="-1" autocomplete="off" />
+          <input type="text" id="company" name="_gotcha" tabindex="-1" autocomplete="off" />
         </div>
 
         <div class="form__row">
@@ -416,7 +420,7 @@ const endpoint = inquiryForm.accessKey
       const data = new FormData(form);
 
       // Honeypot tripped — pretend it worked and drop it on the floor.
-      if (String(data.get('company') ?? '').trim()) {
+      if (String(data.get('_gotcha') ?? '').trim()) {
         setStatus(successMessage, 'ok');
         form.reset();
         return;

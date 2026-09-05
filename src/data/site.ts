@@ -82,18 +82,31 @@ export const contact = {
 
 export const inquiryForm = {
   /**
-   * Where the form posts. Two easy options, no server required:
+   * ─────────────────────────────────────────────────────────────────────────
+   * TO SWITCH THE FORM FROM EMAIL-APP TO REAL SUBMISSIONS
+   * ─────────────────────────────────────────────────────────────────────────
+   * 1. Sign up at https://formspree.io (the free tier covers 50 submissions a
+   *    month, which is comfortably more than this listing will see).
+   * 2. Create a form. Point its notification address at `contact.email` above.
+   * 3. Formspree gives you an endpoint like https://formspree.io/f/abcdwxyz.
+   *    Paste it below, replacing `null`:
    *
-   *   1. Formspree — sign up at formspree.io, create a form, paste the endpoint:
-   *        endpoint: 'https://formspree.io/f/xxxxxxxx'
+   *        endpoint: 'https://formspree.io/f/abcdwxyz',
    *
-   *   2. Web3Forms — free at web3forms.com, paste your access key below and
-   *      leave the endpoint as-is.
+   * 4. Commit and push. Netlify redeploys on its own.
+   * 5. Send yourself a test inquiry from the live site. Formspree needs the
+   *    first submission confirmed from your inbox before it will forward any.
    *
-   * Until one is configured the form still works: it opens the visitor's email
-   * app with everything they typed already filled in, so it is never a dead end.
+   * Nothing else needs changing — the POST path is already wired and tested,
+   * including the honeypot (named `_gotcha`, which Formspree filters server
+   * side) and the failure branch, which shows `contact.email` if a request
+   * ever fails so a visitor is never left with nowhere to go.
    *
-   * TODO: pick one and fill it in.
+   * Web3Forms works too, if preferred: put its key in `accessKey` and leave
+   * `endpoint` as null.
+   *
+   * Until one is set, the form still works — it opens the visitor's mail app
+   * with everything they typed already filled in.
    */
   endpoint: null as string | null,
   /** Only used with Web3Forms. */

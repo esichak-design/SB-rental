@@ -92,19 +92,37 @@ look crisper on a high-density desktop display.
 
 ## The inquiry form
 
-Out of the box the form works with **no configuration**: on submit it opens the
-visitor's email app with their name, move-in date, length of stay, furnishing
-preference, and message already filled in. Nothing is a dead end.
+With no endpoint configured it still works: on submit it opens the visitor's
+mail app addressed to `contact.email`, with their name, move-in date, length of
+stay, furnishing preference and message already filled in.
 
-To have inquiries arrive as normal emails instead, set one of these under
-`inquiryForm` in `src/data/site.ts`:
+That is a real fallback, not a placeholder — but it records nothing, and a
+visitor without a mail client set up (common on a work or shared machine) gets
+nothing at all. Switching it to real submissions takes about two minutes:
 
-- **[Formspree](https://formspree.io)** — `endpoint: 'https://formspree.io/f/xxxxxxxx'`
-- **[Web3Forms](https://web3forms.com)** — `accessKey: 'your-access-key'`
+1. Sign up at [Formspree](https://formspree.io) — the free tier covers 50
+   submissions a month.
+2. Create a form; point its notification address at `contact.email`.
+3. Paste the endpoint it gives you into `inquiryForm.endpoint` in
+   `src/data/site.ts`, replacing `null`:
+   ```ts
+   endpoint: 'https://formspree.io/f/abcdwxyz',
+   ```
+4. Commit and push. Netlify redeploys on its own.
+5. Send a test inquiry from the live site — Formspree needs the first
+   submission confirmed from your inbox before it forwards any.
 
-Both have free tiers that comfortably cover a single listing. The form validates
-before sending, traps bots with a honeypot, and shows a direct email address if
-a request ever fails.
+Nothing else needs changing. The POST path is already wired and has been tested
+end to end against a stand-in endpoint: the request goes out as a POST asking
+for a JSON reply, every field arrives under a clean name, the success state
+resets the form, and a failing request shows `contact.email` while preserving
+what the visitor typed, so nobody is ever left with nowhere to go.
+
+Web3Forms works the same way — put its key in `accessKey` and leave `endpoint`
+as `null`.
+
+The form validates before sending and carries a honeypot field named `_gotcha`,
+which Formspree also filters server side.
 
 ## A note on reviews
 
