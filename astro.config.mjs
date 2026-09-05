@@ -4,10 +4,10 @@ import sitemap from '@astrojs/sitemap';
 
 // https://astro.build/config
 export default defineConfig({
-  // TODO: set this to your production domain, and keep `site.url` in
-  // src/data/site.ts matching. It powers canonical URLs, the Open Graph tags
-  // used for link previews, and the generated sitemap.
-  site: 'https://example.com',
+  // Production domain. Powers canonical URLs, the Open Graph tags used for link
+  // previews, and the generated sitemap. Keep `site.url` in src/data/site.ts
+  // and the Sitemap line in public/robots.txt matching this.
+  site: 'https://325sierra.com',
   integrations: [sitemap()],
   build: {
     inlineStylesheets: 'auto',

@@ -31,16 +31,25 @@ to open a component to change wording or numbers.
 
 Anything still marked `TODO:` in that file is waiting on you.
 
-### Before going live
+### Still outstanding
 
-1. **`src/data/site.ts`** — work through every `TODO:`. The important ones:
-   - `site.name` — currently `325 Sierra`; `Seascape Shores` is the alternative
-   - `contact.email` — where inquiries should land
-   - `leasing.rateRange` — confirm the monthly range
-   - `location.nearby` — add real drive times where they're missing
-2. **`astro.config.mjs`** — set `site` to your real domain.
-3. **`public/robots.txt`** — update the `Sitemap:` host to match.
-4. **Inquiry form** — see below.
+The domain, hosting and build are done. What remains is content only — all of
+it in [`src/data/site.ts`](src/data/site.ts), and none of it needs a developer:
+
+1. **`inquiryForm.endpoint`** — unset, so the form falls back to opening the
+   visitor's mail app with their details pre-filled. It works and reaches the
+   right inbox, but nothing is recorded anywhere and a visitor without a
+   configured mail client gets nothing. See "The inquiry form" below.
+2. **`leasing.rateRange`** — confirm `$10,500 – $15,500` is still current.
+3. **`location.nearby`** — several entries have no drive time. Distances render
+   only when set, so they are simply absent rather than wrong; fill them in as
+   they are confirmed.
+4. **`site.name`** — `325 Sierra`. `Seascape Shores` is the community's name and
+   the obvious alternative.
+5. **Verify the copy.** Details about the in-residence laundry, the desk nook,
+   and the community spa were read off the photographs rather than supplied by
+   the owner. They look right, but a prospective tenant will hold the page to
+   them, so confirm before relying on them.
 
 ## Photos
 
@@ -83,19 +92,37 @@ look crisper on a high-density desktop display.
 
 ## The inquiry form
 
-Out of the box the form works with **no configuration**: on submit it opens the
-visitor's email app with their name, move-in date, length of stay, furnishing
-preference, and message already filled in. Nothing is a dead end.
+With no endpoint configured it still works: on submit it opens the visitor's
+mail app addressed to `contact.email`, with their name, move-in date, length of
+stay, furnishing preference and message already filled in.
 
-To have inquiries arrive as normal emails instead, set one of these under
-`inquiryForm` in `src/data/site.ts`:
+That is a real fallback, not a placeholder — but it records nothing, and a
+visitor without a mail client set up (common on a work or shared machine) gets
+nothing at all. Switching it to real submissions takes about two minutes:
 
-- **[Formspree](https://formspree.io)** — `endpoint: 'https://formspree.io/f/xxxxxxxx'`
-- **[Web3Forms](https://web3forms.com)** — `accessKey: 'your-access-key'`
+1. Sign up at [Formspree](https://formspree.io) — the free tier covers 50
+   submissions a month.
+2. Create a form; point its notification address at `contact.email`.
+3. Paste the endpoint it gives you into `inquiryForm.endpoint` in
+   `src/data/site.ts`, replacing `null`:
+   ```ts
+   endpoint: 'https://formspree.io/f/abcdwxyz',
+   ```
+4. Commit and push. Netlify redeploys on its own.
+5. Send a test inquiry from the live site — Formspree needs the first
+   submission confirmed from your inbox before it forwards any.
 
-Both have free tiers that comfortably cover a single listing. The form validates
-before sending, traps bots with a honeypot, and shows a direct email address if
-a request ever fails.
+Nothing else needs changing. The POST path is already wired and has been tested
+end to end against a stand-in endpoint: the request goes out as a POST asking
+for a JSON reply, every field arrives under a clean name, the success state
+resets the form, and a failing request shows `contact.email` while preserving
+what the visitor typed, so nobody is ever left with nowhere to go.
+
+Web3Forms works the same way — put its key in `accessKey` and leave `endpoint`
+as `null`.
+
+The form validates before sending and carries a honeypot field named `_gotcha`,
+which Formspree also filters server side.
 
 ## A note on reviews
 
@@ -106,11 +133,30 @@ significant financial decision.
 
 ## Deploying
 
-`npm run build` produces a fully static `dist/` folder. Any static host works:
+Hosted on **Netlify** at **https://325sierra.com**, deployed from `main`.
 
-- **Netlify / Vercel / Cloudflare Pages** — connect the repo; they detect Astro
-  automatically. Build command `npm run build`, publish directory `dist`.
-- **GitHub Pages** — serve `dist/` (set `site` and `base` in `astro.config.mjs`).
+Every push to `main` triggers a build and publishes automatically. Pull requests
+get their own preview URL, which is the easiest way to look at a change before
+it is live. A cold build takes roughly ten seconds.
+
+Build settings live in [`netlify.toml`](netlify.toml) rather than in the Netlify
+dashboard, so they are reviewable and travel with the repository — build
+command, publish directory, a pinned Node major version, and per-asset cache
+headers. Nothing needs configuring in the UI.
+
+The site builds to static files. There is no adapter, no serverless function and
+no server: just HTML, CSS and images on a CDN.
+
+### If the domain ever changes
+
+Three files carry it, and they must agree:
+
+- `astro.config.mjs` → `site` — canonical URLs, Open Graph tags, sitemap
+- `src/data/site.ts` → `site.url`
+- `public/robots.txt` → the `Sitemap:` line
+
+Getting these wrong is quiet rather than loud: the site keeps working while
+advertising the wrong hostname to search engines.
 
 ## How it is put together
 
@@ -157,5 +203,6 @@ and inline form validation.
 
 ## Branches
 
-- `main` — production
-- `claude/beach-condo-website-jswivh` — active development
+`main` is the only branch, and it is what deploys. Work on a branch and open a
+pull request if you want a preview URL before publishing; otherwise commit to
+`main` and it goes live.

@@ -1,14 +1,16 @@
 ---
+import { getImage } from 'astro:assets';
 import '../styles/global.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
-import { site } from '../data/site';
+import { getPhoto } from '../lib/photos';
+import { site, hero } from '../data/site';
 
 interface Props {
   /** Page title. The site name is appended automatically. */
   title?: string;
   description?: string;
-  /** Absolute or root-relative path to the social share image. */
+  /** Bare filename from src/assets/photos, e.g. "living-room.jpg". */
   ogImage?: string;
   /** Hero pages draw the header over the image; inner pages need a solid one. */
   solidHeader?: boolean;
@@ -17,13 +19,28 @@ interface Props {
 const {
   title,
   description = site.description,
-  ogImage = '/images/hero.svg',
+  ogImage = hero.image,
   solidHeader = false,
 } = Astro.props;
 
 const pageTitle = title ? `${title} · ${site.name}` : `${site.name} — ${site.tagline}`;
 const canonical = new URL(Astro.url.pathname, Astro.site ?? site.url).href;
-const ogImageUrl = new URL(ogImage, Astro.site ?? site.url).href;
+// Social cards need a real, absolute raster. Resolved through the image
+// pipeline rather than written as a path — the previous hardcoded
+// "/images/hero.svg" quietly became a 404 when photos moved into src/assets,
+// which nothing catches until someone shares the link and gets a blank card.
+//
+// JPEG rather than the site's usual WebP: some platform crawlers still do not
+// take WebP. 1200x630 is the size the major platforms crop to.
+const ogRendered = await getImage({
+  src: getPhoto(ogImage),
+  format: 'jpeg',
+  width: 1200,
+  height: 630,
+  fit: 'cover',
+  position: 'attention',
+});
+const ogImageUrl = new URL(ogRendered.src, Astro.site ?? site.url).href;
 
 // Structured data helps this show up properly in search results.
 const jsonLd = {
@@ -54,11 +71,15 @@ const jsonLd = {
     <meta property="og:description" content={description} />
     <meta property="og:url" content={canonical} />
     <meta property="og:image" content={ogImageUrl} />
+    <meta property="og:image:width" content={String(ogRendered.attributes.width ?? 1200)} />
+    <meta property="og:image:height" content={String(ogRendered.attributes.height ?? 630)} />
+    <meta property="og:image:alt" content={hero.imageAlt} />
     <meta property="og:site_name" content={site.name} />
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={pageTitle} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImageUrl} />
+    <meta name="twitter:image:alt" content={hero.imageAlt} />
 
     {/* Fonts are self-hosted (see src/styles/fonts.css). Preloading the two
         latin faces stops a flash of fallback type on first paint. */}
