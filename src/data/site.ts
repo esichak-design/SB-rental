@@ -61,8 +61,8 @@ export const site = {
   tagline: 'An oceanfront residence on the Solana Beach bluffs',
   description:
     'A recently renovated two-bedroom, two-and-a-half-bath oceanfront residence of approximately 1,500 square feet in Solana Beach, with panoramic Pacific views, beach and pool access, and flexible furnished, semi-furnished, or unfurnished lease terms.',
-  /** TODO: set to your live domain, and update `site` in astro.config.mjs to match. */
-  url: 'https://example.com',
+  /** Live domain. Mirrors `site` in astro.config.mjs — keep the two in step. */
+  url: 'https://325sierra.com',
 };
 
 /* ── Contact ──────────────────────────────────────────────────────────────── */

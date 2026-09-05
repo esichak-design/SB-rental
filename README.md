@@ -31,16 +31,27 @@ to open a component to change wording or numbers.
 
 Anything still marked `TODO:` in that file is waiting on you.
 
-### Before going live
+### Still outstanding
 
-1. **`src/data/site.ts`** — work through every `TODO:`. The important ones:
-   - `site.name` — currently `325 Sierra`; `Seascape Shores` is the alternative
-   - `contact.email` — where inquiries should land
-   - `leasing.rateRange` — confirm the monthly range
-   - `location.nearby` — add real drive times where they're missing
-2. **`astro.config.mjs`** — set `site` to your real domain.
-3. **`public/robots.txt`** — update the `Sitemap:` host to match.
-4. **Inquiry form** — see below.
+The domain, hosting and build are done. What remains is content only — all of
+it in [`src/data/site.ts`](src/data/site.ts), and none of it needs a developer:
+
+1. **`contact.email`** — still `hello@example.com`. Until this is real, the
+   inquiry form emails a placeholder. This is the one that actually loses
+   business, so do it first.
+2. **`inquiryForm.endpoint`** — unset, so the form falls back to opening the
+   visitor's mail app with their details pre-filled. Works, but nothing is
+   recorded anywhere. See "The inquiry form" below.
+3. **`leasing.rateRange`** — confirm `$10,500 – $15,500` is still current.
+4. **`location.nearby`** — several entries have no drive time. Distances render
+   only when set, so they are simply absent rather than wrong; fill them in as
+   they are confirmed.
+5. **`site.name`** — `325 Sierra`. `Seascape Shores` is the community's name and
+   the obvious alternative.
+6. **Verify the copy.** Details about the in-residence laundry, the desk nook,
+   and the community spa were read off the photographs rather than supplied by
+   the owner. They look right, but a prospective tenant will hold the page to
+   them, so confirm before relying on them.
 
 ## Photos
 
@@ -106,11 +117,30 @@ significant financial decision.
 
 ## Deploying
 
-`npm run build` produces a fully static `dist/` folder. Any static host works:
+Hosted on **Netlify** at **https://325sierra.com**, deployed from `main`.
 
-- **Netlify / Vercel / Cloudflare Pages** — connect the repo; they detect Astro
-  automatically. Build command `npm run build`, publish directory `dist`.
-- **GitHub Pages** — serve `dist/` (set `site` and `base` in `astro.config.mjs`).
+Every push to `main` triggers a build and publishes automatically. Pull requests
+get their own preview URL, which is the easiest way to look at a change before
+it is live. A cold build takes roughly ten seconds.
+
+Build settings live in [`netlify.toml`](netlify.toml) rather than in the Netlify
+dashboard, so they are reviewable and travel with the repository — build
+command, publish directory, a pinned Node major version, and per-asset cache
+headers. Nothing needs configuring in the UI.
+
+The site builds to static files. There is no adapter, no serverless function and
+no server: just HTML, CSS and images on a CDN.
+
+### If the domain ever changes
+
+Three files carry it, and they must agree:
+
+- `astro.config.mjs` → `site` — canonical URLs, Open Graph tags, sitemap
+- `src/data/site.ts` → `site.url`
+- `public/robots.txt` → the `Sitemap:` line
+
+Getting these wrong is quiet rather than loud: the site keeps working while
+advertising the wrong hostname to search engines.
 
 ## How it is put together
 
@@ -157,5 +187,6 @@ and inline form validation.
 
 ## Branches
 
-- `main` — production
-- `claude/beach-condo-website-jswivh` — active development
+`main` is the only branch, and it is what deploys. Work on a branch and open a
+pull request if you want a preview URL before publishing; otherwise commit to
+`main` and it goes live.
