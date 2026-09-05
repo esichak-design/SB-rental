@@ -3,43 +3,28 @@ import Photo from './Photo.astro';
 import { hero, quickFacts } from '../data/site';
 ---
 
-{/*
-  Split hero: the copy sits on its own solid panel and the photograph keeps a
-  clear half of the screen to itself.
-
-  The earlier full-bleed treatment could not do both. Measured against the
-  rendered pixels, white text over this photograph ran at 1.1–2.0:1, and no
-  gradient fixes it — the sunset sky is brightest exactly where the headline
-  sits. A translucent panel solved the contrast but covered the sunset, which
-  is the whole point of the image. Splitting them means neither has to
-  compromise: the text is on a known ground, and the sky is unobstructed.
-*/}
 <section class="hero">
-  <div class="hero__panel">
-    <div class="hero__content">
-      <p class="hero__eyebrow">{hero.eyebrow}</p>
-      <h1 class="hero__headline">{hero.headline}</h1>
-      <p class="hero__subhead">{hero.subhead}</p>
-      <div class="hero__actions">
-        <a class="btn btn--lg" href={hero.cta.href}>{hero.cta.label}</a>
-        <a class="btn btn--lg btn--onPanel" href={hero.secondaryCta.href}>
-          {hero.secondaryCta.label}
-        </a>
-      </div>
-    </div>
-  </div>
-
   <div class="hero__media">
     <Photo
       name={hero.image}
       alt={hero.imageAlt}
-      sizes="(max-width: 60rem) 100vw, 56vw"
-      widths={[640, 900]}
+      sizes="100vw"
+      widths={[768]}
       priority
     />
-    {/* Only a top wash, and only over the photograph: the fixed header crosses
-        this half, and the ceiling behind it is bright. The rest is left clear. */}
-    <div class="hero__wash" aria-hidden="true"></div>
+    <div class="hero__scrim" aria-hidden="true"></div>
+  </div>
+
+  <div class="hero__body container container--wide">
+    <p class="hero__eyebrow">{hero.eyebrow}</p>
+    <h1 class="display hero__headline">{hero.headline}</h1>
+    <p class="hero__subhead">{hero.subhead}</p>
+    <div class="hero__actions">
+      <a class="btn btn--lg" href={hero.cta.href}>{hero.cta.label}</a>
+      <a class="btn btn--lg btn--onDark" href={hero.secondaryCta.href}>
+        {hero.secondaryCta.label}
+      </a>
+    </div>
   </div>
 
   <a class="hero__scroll" href="#the-residence" aria-label="Scroll to the residence details">
@@ -60,64 +45,85 @@ import { hero, quickFacts } from '../data/site';
 
 <style>
   .hero {
-    display: grid;
-    grid-template-columns: minmax(0, 45fr) minmax(0, 55fr);
-    min-height: min(100svh, 60rem);
-    isolation: isolate;
-  }
-
-  /* ── Copy panel ─────────────────────────────────────────────────────────── */
-  .hero__panel {
-    /* Line the copy up with the wordmark above it. That inset is where the
-       page container's content starts, so it is reproduced here rather than
-       guessed at — otherwise the hero text sits ~70px left of the wordmark at
-       wide viewports and the left edge reads as broken. */
-    --panel-inset: max(var(--gutter), calc((100vw - var(--w-wide)) / 2 + var(--gutter)));
-
+    position: relative;
+    min-height: min(100svh, 62rem);
     display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
-    background: #0f1a22;
-    color: #fff;
-    padding: calc(var(--header-h) + var(--s-7)) clamp(1.5rem, 3vw, 3.5rem) var(--s-9)
-      var(--panel-inset);
+    align-items: flex-end;
+    padding-block: var(--s-12) var(--s-10);
+    isolation: isolate;
+    overflow: hidden;
   }
 
-  .hero__content {
+  .hero__media { position: absolute; inset: 0; z-index: -1; }
+  /* :global is required — the <img> is rendered by the Photo component and so
+     carries that component's scope id, not this one's. A plain `img` selector
+     here is silently scoped to Hero and never matches. */
+  .hero__media :global(img) {
     width: 100%;
-    max-width: 34rem;
+    height: 100%;
+    object-fit: cover;
   }
+
+  /* Two stacked scrims: a broad bottom wash for text contrast, and a light
+     top wash so the transparent header stays legible against a bright sky. */
+  /* Shaped so the sky keeps its own space.
+     The copy sits along the bottom and the sunset fills the top, so the scrim
+     is heavy where the text is and clears entirely above it. Measured against
+     the rendered pixels rather than judged by eye — a flat gradient strong
+     enough for the text was dimming the middle of the sky, which is the whole
+     reason this photograph was chosen. */
+  .hero__scrim {
+    position: absolute;
+    inset: 0;
+    background:
+      linear-gradient(
+        to top,
+        rgba(8, 15, 20, 0.93) 0%,
+        rgba(8, 15, 20, 0.90) 30%,
+        rgba(8, 15, 20, 0.80) 46%,
+        rgba(8, 15, 20, 0.72) 54%,
+        rgba(8, 15, 20, 0.34) 64%,
+        rgba(8, 15, 20, 0.04) 70%,
+        rgba(8, 15, 20, 0) 78%
+      ),
+      /* The header sits directly on the photograph. */
+      linear-gradient(
+        to bottom,
+        rgba(8, 15, 20, 0.66) 0%,
+        rgba(8, 15, 20, 0.46) 7%,
+        rgba(8, 15, 20, 0.14) 14%,
+        rgba(8, 15, 20, 0) 22%
+      );
+  }
+
+  .hero__body { color: #fff; }
 
   .hero__eyebrow {
     font-size: var(--t-xs);
     font-weight: 600;
     letter-spacing: var(--ls-caps);
     text-transform: uppercase;
-    color: var(--c-sea-soft);
+    color: #fff;
     margin-bottom: var(--s-5);
+    text-shadow: 0 1px 3px rgba(8, 15, 20, 0.55);
     animation: heroIn var(--d-slow) var(--ease-out) both;
   }
 
   .hero__headline {
-    font-family: var(--font-display);
-    font-weight: 400;
-    /* Smaller than the old full-bleed display size: the panel is a column, not
-       the whole viewport, and the line needs room to breathe in it. */
-    font-size: clamp(2.75rem, 4.6vw, 5.25rem);
-    line-height: 1.02;
-    letter-spacing: var(--ls-tight);
-    font-variation-settings: 'SOFT' 30, 'WONK' 1, 'opsz' 120;
-    text-wrap: balance;
+    color: #fff;
+    max-width: 16ch;
+    text-shadow: 0 1px 3px rgba(8, 15, 20, 0.45), 0 2px 28px rgba(8, 15, 20, 0.35);
     animation: heroIn var(--d-slow) var(--ease-out) 90ms both;
   }
 
   .hero__subhead {
     margin-top: var(--s-5);
+    max-width: 44ch;
     font-size: var(--t-lg);
     line-height: var(--lh-loose);
-    color: rgba(255, 255, 255, 0.82);
+    color: rgba(255, 255, 255, 0.94);
     text-wrap: pretty;
+    text-shadow: 0 1px 3px rgba(8, 15, 20, 0.5);
     animation: heroIn var(--d-slow) var(--ease-out) 180ms both;
   }
 
@@ -129,55 +135,15 @@ import { hero, quickFacts } from '../data/site';
     animation: heroIn var(--d-slow) var(--ease-out) 270ms both;
   }
 
-  /* Outline button, sitting on the panel rather than on photography. */
-  .btn--onPanel {
-    --btn-bg: transparent;
-    --btn-fg: #fff;
-    --btn-bd: rgba(255, 255, 255, 0.42);
-  }
-  .btn--onPanel:hover { --btn-bg: #fff; --btn-fg: #0f1a22; --btn-bd: #fff; }
-
   @keyframes heroIn {
     from { opacity: 0; transform: translateY(1.5rem); }
     to   { opacity: 1; transform: none; }
   }
 
-  /* ── Photograph ─────────────────────────────────────────────────────────── */
-  .hero__media {
-    position: relative;
-    overflow: hidden;
-    background: var(--c-shell);
-  }
-
-  .hero__media :global(img) {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    /* Bias the crop up and slightly left so the gable window — and the sunset
-       through it — stays in frame as the column narrows. */
-    object-position: 42% 38%;
-  }
-
-  /* Sized against the header rather than as a percentage of the image, so it
-     covers the same band whatever height the photograph is given. */
-  .hero__wash {
-    position: absolute;
-    inset: 0 0 auto 0;
-    height: calc(var(--header-h) + 4rem);
-    background: linear-gradient(
-      to bottom,
-      rgba(8, 15, 20, 0.72) 0%,
-      rgba(8, 15, 20, 0.64) 52%,
-      rgba(8, 15, 20, 0.28) 80%,
-      rgba(8, 15, 20, 0) 100%
-    );
-    pointer-events: none;
-  }
-
   /* ── Scroll cue ─────────────────────────────────────────────────────────── */
   .hero__scroll {
     position: absolute;
-    left: 22.5%;
+    left: 50%;
     bottom: var(--s-5);
     translate: -50% 0;
     width: 2.5rem;
@@ -188,7 +154,7 @@ import { hero, quickFacts } from '../data/site';
   .hero__scroll-line {
     width: 1px;
     height: 2.5rem;
-    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.7) 100%);
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.85) 100%);
     transform-origin: top;
     animation: drop 2.4s var(--ease) infinite;
   }
@@ -199,31 +165,6 @@ import { hero, quickFacts } from '../data/site';
     100%      { transform: scaleY(1) translateY(100%); opacity: 0; }
   }
 
-  /* ── Stacked: photograph above, copy below ──────────────────────────────── */
-  @media (max-width: 60rem) {
-    .hero {
-      grid-template-columns: 1fr;
-      grid-template-rows: auto auto;
-      min-height: 0;
-    }
-    /* Photograph first, so the sunset is what you land on. */
-    .hero__media { grid-row: 1; height: clamp(20rem, 52svh, 32rem); }
-    .hero__media :global(img) { object-position: 45% 40%; }
-
-    .hero__panel {
-      grid-row: 2;
-      align-items: stretch;
-      --panel-inset: var(--gutter);
-      padding: clamp(2.25rem, 7vw, 3.5rem) var(--gutter) clamp(2.75rem, 8vw, 4rem);
-    }
-    .hero__content { max-width: none; margin-right: 0; }
-    .hero__scroll { display: none; }
-  }
-
-  @media (max-width: 34rem) {
-    .hero__actions .btn { flex: 1 1 auto; }
-  }
-
   /* ── Quick facts ────────────────────────────────────────────────────────── */
   .facts {
     background: var(--c-ink);
@@ -231,7 +172,10 @@ import { hero, quickFacts } from '../data/site';
     padding-block: var(--s-6);
   }
 
-  .facts__list { display: grid; grid-template-columns: repeat(4, 1fr); }
+  .facts__list {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
 
   .facts__item {
     display: grid;
@@ -258,12 +202,56 @@ import { hero, quickFacts } from '../data/site';
   }
 
   @media (max-width: 40rem) {
+    .hero { min-height: 92svh; }
+    .hero__actions .btn { flex: 1 1 auto; }
+
+    /* The header already reads "Solana Beach, California" two lines above this,
+       so repeating it here costs vertical space for nothing. Dropping it on
+       small screens shortens the block, which lets it sit lower in the frame —
+       and that is what allows the scrim beneath it to stop short of the sky.
+       It stays in the document for screen readers. */
+    .hero__eyebrow {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip-path: inset(50%);
+      white-space: nowrap;
+    }
+
+    .hero__subhead { margin-top: var(--s-3); line-height: 1.55; }
+    .hero__actions { margin-top: var(--s-6); }
+
+    /* Sit the block closer to the bottom edge for the same reason. */
+    .hero { padding-block: var(--s-10) var(--s-7); }
+
+    /* Clear above the copy, heavy under it. The top quarter — the brightest
+       part of the sky — is left completely untouched. */
+    .hero__scrim {
+      background:
+        linear-gradient(
+          to top,
+          rgba(8, 15, 20, 0.95) 0%,
+          rgba(8, 15, 20, 0.93) 32%,
+          rgba(8, 15, 20, 0.84) 46%,
+          rgba(8, 15, 20, 0.56) 58%,
+          rgba(8, 15, 20, 0.18) 68%,
+          rgba(8, 15, 20, 0) 78%
+        ),
+        linear-gradient(
+          to bottom,
+          rgba(8, 15, 20, 0.66) 0%,
+          rgba(8, 15, 20, 0.44) 8%,
+          rgba(8, 15, 20, 0.12) 15%,
+          rgba(8, 15, 20, 0) 23%
+        );
+    }
     .facts__list { grid-template-columns: repeat(2, 1fr); row-gap: var(--s-5); }
     .facts__item:nth-child(odd) { border-left: 0; }
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__scroll-line { animation: none; opacity: 0.8; }
+    .hero__scroll-line { animation: none; opacity: 0.85; }
     :is(.hero__eyebrow, .hero__headline, .hero__subhead, .hero__actions) { animation: none; }
   }
 </style>

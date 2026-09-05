@@ -72,7 +72,10 @@ const { solid = false } = Astro.props;
 
   /* ── Over the hero: white text, no background ───────────────────────────── */
   .site-header :is(.wordmark, .site-nav__link) { color: #fff; }
-  .site-header .wordmark__place { color: rgba(255, 255, 255, 0.72); }
+  /* Was 0.72, which measured 3.13:1 over the hero photograph. It is 12px, so
+     it needs 4.5:1 — and since it is lighter than its ground, more opacity
+     raises the ratio rather than lowering it. */
+  .site-header .wordmark__place { color: rgba(255, 255, 255, 0.94); }
   .site-header .menu-toggle__bar { background: #fff; }
 
   /* ── Scrolled, or on an inner page: solid ───────────────────────────────── */
