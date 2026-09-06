@@ -399,6 +399,12 @@ export const photos: Photo[] = [
   { src: 'building-turret.jpg', alt: 'The cedar-shingled building with its distinctive round turret', tags: ['building'] },
   { src: 'building-twilight.jpg', alt: 'The building at dusk with its windows lit', tags: ['building'] },
   { src: 'entry-path.jpg', alt: 'The planted path leading to the residence', tags: ['building'] },
+  { src: 'pool-loungers.jpg', alt: 'Loungers and shaded tables on the pool deck, palms and the shingled buildings beyond', tags: ['building'] },
+  { src: 'grounds-lawn-path.jpg', alt: 'A path curving across the community lawn between the buildings, past flowering beds and palms', tags: ['building'] },
+  { src: 'grounds-planting.jpg', alt: 'Subtropical planting — flax, succulents and palms — along a brick-edged path through the grounds', tags: ['building'] },
+  { src: 'grounds-stairs.jpg', alt: 'Wooden steps climbing between the buildings, past a low stone retaining wall and clipped hedge', tags: ['building'] },
+  { src: 'grounds-stairs-twilight.jpg', alt: 'The steps between the buildings at dusk, windows lit gold against a pink and violet sky', tags: ['building'] },
+  { src: 'building-ocean-glimpse.jpg', alt: 'A strip of lawn and path running between two buildings to the ocean at the far end', tags: ['building', 'views'] },
 ];
 
 /**
