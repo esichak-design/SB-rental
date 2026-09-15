@@ -65,7 +65,10 @@ export function isVector(asset: ImageMetadata): boolean {
  * This round-robins across the groups (taking the first photo of each in turn,
  * then the second of each, and so on) so consecutive tiles show different
  * spaces. Order within a group is preserved, so the strongest shot of each room
- * still leads. Filtered views are unaffected — they select by tag, not position.
+ * still leads.
+ *
+ * Used as a building block by `orderForGallery` below, which is what the
+ * gallery actually renders.
  */
 export function interleaveByGroup<T extends { tags?: readonly string[] }>(items: T[]): T[] {
   const groups = new Map<string, T[]>();
@@ -87,4 +90,57 @@ export function interleaveByGroup<T extends { tags?: readonly string[] }>(items:
   }
 
   return out;
+}
+
+/**
+ * True for the dusk photographs, identified by the naming convention used
+ * throughout src/assets/photos (`…-twilight.jpg`).
+ */
+export function isTwilight(photo: { src: string }): boolean {
+  return photo.src.includes('twilight');
+}
+
+/**
+ * The gallery's display order — three bands, in sequence:
+ *
+ *   1. `lead`, pinned by filename in site.ts, in the order given there.
+ *   2. Every remaining twilight shot.
+ *   3. Everything else.
+ *
+ * Bands 2 and 3 are each interleaved by group, so consecutive tiles still show
+ * different spaces rather than a run of near-identical rooms.
+ *
+ * Why twilight leads globally rather than within each group: the filters hide
+ * cells rather than re-rendering them, so this one order is also the order
+ * inside every filter. Putting the dusk shots ahead of everything else means
+ * they lead whichever group a visitor narrows to, which is what was asked for —
+ * grouping them per-tag would only have biased the unfiltered view.
+ *
+ * A pinned name missing from `items` throws rather than being skipped: a typo
+ * should fail the build, not quietly drop a photograph from the front.
+ */
+export function orderForGallery<T extends { src: string; tags?: readonly string[] }>(
+  items: T[],
+  lead: readonly string[] = [],
+): T[] {
+  const byName = new Map(items.map((item) => [item.src, item]));
+
+  const pinned = lead.map((name) => {
+    const photo = byName.get(name);
+    if (!photo) {
+      throw new Error(
+        `galleryLead names "${name}", which is not in the photos array in src/data/site.ts.`,
+      );
+    }
+    return photo;
+  });
+
+  const pinnedNames = new Set(pinned.map((photo) => photo.src));
+  const rest = items.filter((item) => !pinnedNames.has(item.src));
+
+  return [
+    ...pinned,
+    ...interleaveByGroup(rest.filter(isTwilight)),
+    ...interleaveByGroup(rest.filter((item) => !isTwilight(item))),
+  ];
 }

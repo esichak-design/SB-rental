@@ -1,12 +1,13 @@
 ---
 import { getImage } from 'astro:assets';
 import Photo from './Photo.astro';
-import { photos as sourcePhotos, galleryTags } from '../data/site';
-import { interleaveByGroup, getPhoto } from '../lib/photos';
+import { photos as sourcePhotos, galleryTags, galleryLead } from '../data/site';
+import { orderForGallery, getPhoto } from '../lib/photos';
 
-// site.ts groups photos by room, which is right for editing but would open the
-// gallery with six near-identical living rooms. Interleave for display.
-const photos = interleaveByGroup(sourcePhotos);
+// site.ts groups photos by room, which is right for editing but wrong for
+// display. Reorder: the pinned leads first, then the twilight shots, then
+// everything else — see orderForGallery for why twilight leads globally.
+const photos = orderForGallery(sourcePhotos, galleryLead);
 
 // The lightbox swaps images at runtime, so it needs real built URLs rather than
 // the bare source filenames `photos` carries. Resolve them here, at build time.

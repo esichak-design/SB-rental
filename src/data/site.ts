@@ -133,7 +133,7 @@ export const hero = {
   /** Rendered large. Keep it short. */
   headline: 'Perched above the Pacific',
   subhead:
-    'A renovated two-bedroom oceanfront residence on the Solana Beach bluffs. Wake to panoramic ocean views, watch the surfers with your morning coffee, and take the sunsets from home.',
+    'Inside a gated oceanfront community on the Solana Beach bluffs: a two-bedroom residence with panoramic water views, bluff-top lawns, and private stairs to the beach.',
   /**
    * TODO: your best wide, bright ocean-view photo. Bare filename.
    *
@@ -340,8 +340,6 @@ export const rooms: Room[] = [
  */
 export const photos: Photo[] = [
   // Living
-  { src: 'living-room-ocean.jpg', alt: 'The living room under a vaulted ceiling, with the ocean visible through the far window', tags: ['living', 'views'] },
-  { src: 'living-room-fireplace.jpg', alt: 'The living room fireplace with a reclaimed timber mantel and a television above', tags: ['living'] },
   { src: 'living-room.jpg', alt: 'The living room seating area, with clerestory windows above the main glazing', tags: ['living'] },
   { src: 'living-room-wide.jpg', alt: 'The full width of the living room, looking toward the window seat', tags: ['living'] },
   { src: 'living-room-staircase.jpg', alt: 'The living room with the iron spiral staircase rising to the upper floor', tags: ['living'] },
@@ -365,7 +363,6 @@ export const photos: Photo[] = [
   { src: 'second-bedroom-wide.jpg', alt: 'The second bedroom seen from the opposite corner', tags: ['bedrooms'] },
 
   // Baths
-  { src: 'primary-bath.jpg', alt: 'The primary bathroom, with a double oak vanity and brass fittings', tags: ['bath'] },
   { src: 'primary-bath-shower.jpg', alt: 'The primary walk-in shower, tiled floor to ceiling with a bench seat', tags: ['bath'] },
   { src: 'primary-bath-closet.jpg', alt: 'The primary vanity beside the fitted walk-in closet', tags: ['bath'] },
   { src: 'second-bath.jpg', alt: 'The second bathroom, with a walk-in shower and patterned tile floor', tags: ['bath'] },
@@ -395,13 +392,11 @@ export const photos: Photo[] = [
   { src: 'spa.jpg', alt: 'The community spa beside the pool deck', tags: ['building'] },
   { src: 'pool-deck.jpg', alt: 'Loungers and umbrellas on the pool deck', tags: ['building'] },
   { src: 'pergola-walk.jpg', alt: 'A pergola-covered walkway through the community planting', tags: ['building'] },
-  { src: 'grounds-courtyard.jpg', alt: 'A landscaped courtyard between the buildings', tags: ['building'] },
   { src: 'building-turret.jpg', alt: 'The cedar-shingled building with its distinctive round turret', tags: ['building'] },
   { src: 'building-twilight.jpg', alt: 'The building at dusk with its windows lit', tags: ['building'] },
   { src: 'entry-path.jpg', alt: 'The planted path leading to the residence', tags: ['building'] },
   { src: 'pool-loungers.jpg', alt: 'Loungers and shaded tables on the pool deck, palms and the shingled buildings beyond', tags: ['building'] },
   { src: 'grounds-lawn-path.jpg', alt: 'A path curving across the community lawn between the buildings, past flowering beds and palms', tags: ['building'] },
-  { src: 'grounds-planting.jpg', alt: 'Subtropical planting — flax, succulents and palms — along a brick-edged path through the grounds', tags: ['building'] },
   { src: 'grounds-stairs.jpg', alt: 'Wooden steps climbing between the buildings, past a low stone retaining wall and clipped hedge', tags: ['building'] },
   { src: 'grounds-stairs-twilight.jpg', alt: 'The steps between the buildings at dusk, windows lit gold against a pink and violet sky', tags: ['building'] },
   { src: 'building-ocean-glimpse.jpg', alt: 'A strip of lawn and path running between two buildings to the ocean at the far end', tags: ['building', 'views'] },
@@ -418,12 +413,26 @@ export const photos: Photo[] = [
  */
 export const featuredPhotos: string[] = [
   'lawn-sunset.jpg',
-  'living-room-ocean.jpg',
+  'living-room-twilight.jpg',
   'kitchen.jpg',
   'primary-bedroom-day.jpg',
-  'primary-bath.jpg',
+  'primary-bath-shower.jpg',
   'bluff-benches.jpg',
   'pool.jpg',
+];
+
+/**
+ * Photographs pinned to the front of the gallery, in this order, ahead of
+ * everything else.
+ *
+ * Use it sparingly — two or three at most. Everything after these is ordered
+ * automatically: twilight shots first (see `orderForGallery` in lib/photos.ts),
+ * then the rest, each block interleaved so consecutive tiles show different
+ * spaces. A name that is not in `photos` above fails the build.
+ */
+export const galleryLead: string[] = [
+  'building-twilight.jpg',
+  'grounds-stairs-twilight.jpg',
 ];
 
 /* ── Location ─────────────────────────────────────────────────────────────── */
