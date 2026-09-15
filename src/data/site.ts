@@ -60,7 +60,7 @@ export const site = {
   location: 'Solana Beach, California',
   tagline: 'An oceanfront residence on the Solana Beach bluffs',
   description:
-    'A recently renovated two-bedroom, two-and-a-half-bath oceanfront residence of approximately 1,500 square feet in Solana Beach, with panoramic Pacific views, beach and pool access, and flexible furnished, semi-furnished, or unfurnished lease terms.',
+    'A two-bedroom, two-and-a-half-bath oceanfront residence of approximately 1,500 square feet in Solana Beach, with panoramic Pacific views, beach and pool access, and flexible furnished, semi-furnished, or unfurnished lease terms.',
   /** Live domain. Mirrors `site` in astro.config.mjs — keep the two in step. */
   url: 'https://325sierra.com',
 };
@@ -133,7 +133,7 @@ export const hero = {
   /** Rendered large. Keep it short. */
   headline: 'Perched above the Pacific',
   subhead:
-    'A renovated two-bedroom oceanfront residence on the Solana Beach bluffs. Wake to panoramic ocean views, watch the surfers with your morning coffee, and take the sunsets from home.',
+    'Inside a gated oceanfront community on the Solana Beach bluffs: a two-bedroom residence with panoramic water views, bluff-top lawns, and steps to the beach.',
   /**
    * TODO: your best wide, bright ocean-view photo. Bare filename.
    *
@@ -143,7 +143,7 @@ export const hero = {
    * a lighter treatment, a brighter one may need a heavier panel.
    */
   image: 'primary-bedroom-twilight.jpg',
-  imageAlt: 'The primary bedroom at dusk, its gable window filled with a sunset over the Pacific',
+  imageAlt: 'The primary bedroom at dusk, its peaked window filled with a sunset over the Pacific',
   cta: { label: 'Inquire about leasing', href: '#inquire' },
   secondaryCta: { label: 'See the residence', href: '/gallery' },
 };
@@ -161,12 +161,12 @@ export const quickFacts = [
 
 export const intro = {
   eyebrow: 'The Residence',
-  headline: 'Renovated, and built around the view',
+  headline: 'Above the Pacific, built around the view',
   /** Each string becomes a paragraph. */
   body: [
     'Perched on the bluffs above the Pacific, the residence is filled with natural light — vaulted ceilings with exposed beams, clerestory windows, and wide-plank oak floors throughout. Approximately 1,500 square feet across two levels, joined by a sculptural iron spiral staircase.',
-    'The remodel was thorough. A white-and-oak kitchen with quartz counters, a professional gas range, and an island that seats three. Fireplaces in both the living room and the primary suite. A built-in window seat, a tucked-away desk nook, and full-size laundry inside the residence rather than down a corridor.',
-    'Upstairs, the primary suite takes the gable end: a wall of glass framing the water, a fireplace at the foot of the bed, a double vanity, and a fitted walk-in closet. The second bedroom has its own bath and closet.',
+    'A white-and-oak kitchen with quartz counters, a professional gas range, and an island that seats three. Fireplaces in both the living room and the primary suite. A built-in window seat, a tucked-away desk nook, and full-size laundry inside the residence rather than down a corridor.',
+    'Upstairs, the primary suite takes the far end: a wall of glass framing the water, a fireplace at the foot of the bed, a double vanity, and a fitted walk-in closet. The second bedroom has its own bath and closet.',
   ],
   /** TODO: a bright interior shot with the view in it works well here. */
   image: 'living-room-ocean.jpg',
@@ -230,7 +230,7 @@ export const amenities: AmenityGroup[] = [
   {
     title: 'Primary suite',
     items: [
-      'Gable wall of glass framing the Pacific',
+      'Full-height wall of glass framing the Pacific',
       'Second gas fireplace',
       'Vaulted, beamed ceiling',
       'Double vanity in oak with brass fittings',
@@ -293,14 +293,14 @@ export const rooms: Room[] = [
     detail:
       'White shaker cabinetry against an oak island, quartz counters and a full-slab backsplash, a professional gas range under a vented oak hood, and a built-in refrigerator. Three stools at the island; the deck is a step away.',
     image: 'kitchen.jpg',
-    imageAlt: 'The renovated kitchen with oak island and professional gas range',
+    imageAlt: 'The kitchen with its oak island and professional gas range',
   },
   {
     name: 'Primary Suite',
     detail:
-      'The gable end of the upper floor, given over to a wall of glass above the water. A fireplace at the foot of the bed, a beamed ceiling overhead, a double oak vanity, and a fitted walk-in closet.',
+      'The far end of the upper floor, given over to a wall of glass above the water. A fireplace at the foot of the bed, a beamed ceiling overhead, a double oak vanity, and a fitted walk-in closet.',
     image: 'primary-bedroom-day.jpg',
-    imageAlt: 'The primary suite with its gable window over the ocean and a fireplace',
+    imageAlt: 'The primary suite with its peaked window over the ocean and a fireplace',
   },
   {
     name: 'Second Bedroom',
@@ -340,8 +340,6 @@ export const rooms: Room[] = [
  */
 export const photos: Photo[] = [
   // Living
-  { src: 'living-room-ocean.jpg', alt: 'The living room under a vaulted ceiling, with the ocean visible through the far window', tags: ['living', 'views'] },
-  { src: 'living-room-fireplace.jpg', alt: 'The living room fireplace with a reclaimed timber mantel and a television above', tags: ['living'] },
   { src: 'living-room.jpg', alt: 'The living room seating area, with clerestory windows above the main glazing', tags: ['living'] },
   { src: 'living-room-wide.jpg', alt: 'The full width of the living room, looking toward the window seat', tags: ['living'] },
   { src: 'living-room-staircase.jpg', alt: 'The living room with the iron spiral staircase rising to the upper floor', tags: ['living'] },
@@ -356,7 +354,7 @@ export const photos: Photo[] = [
   { src: 'dining.jpg', alt: 'The dining table against a panelled oak wall, open to the kitchen', tags: ['kitchen'] },
 
   // Bedrooms
-  { src: 'primary-bedroom-twilight.jpg', alt: 'The primary bedroom at dusk, the gable window filled with a pink sunset over the Pacific', tags: ['bedrooms', 'views'], caption: 'The primary suite, facing the water.' },
+  { src: 'primary-bedroom-twilight.jpg', alt: 'The primary bedroom at dusk, the peaked window filled with a pink sunset over the Pacific', tags: ['bedrooms', 'views'], caption: 'The primary suite, facing the water.' },
   { src: 'primary-bedroom-day.jpg', alt: 'The primary bedroom by day, a wall of glass framing the ocean beside the bed', tags: ['bedrooms', 'views'] },
   { src: 'primary-bedroom.jpg', alt: 'The primary bedroom, with a fireplace set into the wall opposite the bed', tags: ['bedrooms'] },
   { src: 'primary-bedroom-sitting.jpg', alt: 'The primary bedroom looking toward its sitting area under the vaulted ceiling', tags: ['bedrooms'] },
@@ -365,7 +363,6 @@ export const photos: Photo[] = [
   { src: 'second-bedroom-wide.jpg', alt: 'The second bedroom seen from the opposite corner', tags: ['bedrooms'] },
 
   // Baths
-  { src: 'primary-bath.jpg', alt: 'The primary bathroom, with a double oak vanity and brass fittings', tags: ['bath'] },
   { src: 'primary-bath-shower.jpg', alt: 'The primary walk-in shower, tiled floor to ceiling with a bench seat', tags: ['bath'] },
   { src: 'primary-bath-closet.jpg', alt: 'The primary vanity beside the fitted walk-in closet', tags: ['bath'] },
   { src: 'second-bath.jpg', alt: 'The second bathroom, with a walk-in shower and patterned tile floor', tags: ['bath'] },
@@ -395,13 +392,11 @@ export const photos: Photo[] = [
   { src: 'spa.jpg', alt: 'The community spa beside the pool deck', tags: ['building'] },
   { src: 'pool-deck.jpg', alt: 'Loungers and umbrellas on the pool deck', tags: ['building'] },
   { src: 'pergola-walk.jpg', alt: 'A pergola-covered walkway through the community planting', tags: ['building'] },
-  { src: 'grounds-courtyard.jpg', alt: 'A landscaped courtyard between the buildings', tags: ['building'] },
   { src: 'building-turret.jpg', alt: 'The cedar-shingled building with its distinctive round turret', tags: ['building'] },
   { src: 'building-twilight.jpg', alt: 'The building at dusk with its windows lit', tags: ['building'] },
   { src: 'entry-path.jpg', alt: 'The planted path leading to the residence', tags: ['building'] },
   { src: 'pool-loungers.jpg', alt: 'Loungers and shaded tables on the pool deck, palms and the shingled buildings beyond', tags: ['building'] },
   { src: 'grounds-lawn-path.jpg', alt: 'A path curving across the community lawn between the buildings, past flowering beds and palms', tags: ['building'] },
-  { src: 'grounds-planting.jpg', alt: 'Subtropical planting — flax, succulents and palms — along a brick-edged path through the grounds', tags: ['building'] },
   { src: 'grounds-stairs.jpg', alt: 'Wooden steps climbing between the buildings, past a low stone retaining wall and clipped hedge', tags: ['building'] },
   { src: 'grounds-stairs-twilight.jpg', alt: 'The steps between the buildings at dusk, windows lit gold against a pink and violet sky', tags: ['building'] },
   { src: 'building-ocean-glimpse.jpg', alt: 'A strip of lawn and path running between two buildings to the ocean at the far end', tags: ['building', 'views'] },
@@ -418,12 +413,26 @@ export const photos: Photo[] = [
  */
 export const featuredPhotos: string[] = [
   'lawn-sunset.jpg',
-  'living-room-ocean.jpg',
+  'living-room-twilight.jpg',
   'kitchen.jpg',
   'primary-bedroom-day.jpg',
-  'primary-bath.jpg',
+  'primary-bath-shower.jpg',
   'bluff-benches.jpg',
   'pool.jpg',
+];
+
+/**
+ * Photographs pinned to the front of the gallery, in this order, ahead of
+ * everything else.
+ *
+ * Use it sparingly — two or three at most. Everything after these is ordered
+ * automatically: twilight shots first (see `orderForGallery` in lib/photos.ts),
+ * then the rest, each block interleaved so consecutive tiles show different
+ * spaces. A name that is not in `photos` above fails the build.
+ */
+export const galleryLead: string[] = [
+  'building-twilight.jpg',
+  'grounds-stairs-twilight.jpg',
 ];
 
 /* ── Location ─────────────────────────────────────────────────────────────── */
@@ -470,7 +479,7 @@ export const leaseOptions: LeaseOption[] = [
     name: 'Fully furnished',
     summary: 'Turnkey',
     detail:
-      'Arrive with a suitcase. Custom furnishings throughout, high-end appliances, and a recent full remodel — ready to enjoy from day one.',
+      'Arrive with a suitcase. Custom furnishings throughout and high-end appliances — ready to enjoy from day one.',
   },
   {
     name: 'Semi-furnished',
